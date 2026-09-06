@@ -1,1 +1,35 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>封面编辑台</title><link rel="stylesheet" href="style.css"><style>main{max-width:1200px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}.item{border:1px solid var(--line);padding:12px}.preview{aspect-ratio:4/5;background:#eee;overflow:hidden}.preview img{width:100%;height:100%;object-fit:cover}.item label{display:block;font-size:12px;margin-top:8px}.item input{width:100%}</style><body><nav class="top"><a href="index.html">← 返回网站</a><b>閲読器作品記録｜封面编辑台</b></nav><main><h1>封面编辑台</h1><p>先上传图片，再拖动横向或纵向滑杆；预览会立即更新。</p><button id="export">导出修改清单</button><div id="list" class="grid"></div></main><script>let edits=JSON.parse(localStorage.getItem('ydq-cover-edits')||'{}'),save=()=>localStorage.setItem('ydq-cover-edits',JSON.stringify(edits));fetch('index.html').then(r=>r.text()).then(t=>{let d=document.createElement('div');d.innerHTML=t;list.innerHTML=[...d.querySelectorAll('#catalog .card')].map(c=>{let id=c.querySelector('a').getAttribute('href').match(/work-\d+/)[0],n=c.querySelector('h3').textContent,e=edits[id]||{},i=c.querySelector('img');return `<section class="item" data-id="${id}"><div class="preview">${i?`<img src="${i.src}" style="object-position:${e.position||'50% 50%'}">`:'<span>上传封面后预览</span>'}</div><b>${n}</b><label>图片 <input class="file" type="file" accept="image/*"></label><label>横向 <input class="x" type="range" min="0" max="100" value="${e.x||50}"></label><label>纵向 <input class="y" type="range" min="0" max="100" value="${e.y||50}"></label></section>`}).join('');document.querySelectorAll('.item').forEach(c=>{let id=c.dataset.id,update=()=>{let x=c.querySelector('.x').value,y=c.querySelector('.y').value;edits[id]={...(edits[id]||{}),x,y,position:`${x}% ${y}%`};c.querySelector('img')?.style.setProperty('object-position',edits[id].position);save()};c.querySelector('.x').oninput=update;c.querySelector('.y').oninput=update;c.querySelector('.file').onchange=e=>{let f=e.target.files[0];if(!f)return;edits[id]={...(edits[id]||{}),file:f.name};let u=URL.createObjectURL(f),p=c.querySelector('.preview');p.innerHTML=`<img src="${u}" style="object-position:${edits[id].position||'50% 50%'}">`;update()}})});export.onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(edits,null,2)],{type:'application/json'}));a.download='cover-overrides.json';a.click()}</script></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>批量封面上传台｜閲読器作品記録</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    main{max-width:1260px}.upload-panel{border:2px solid var(--line);background:#f1eadc;padding:22px;box-shadow:5px 5px 0 #bdcab9}.upload-panel input{display:block;margin:12px 0}.upload-panel button{border:2px solid #3a403a;background:#52715b;color:#fff;padding:9px 14px;font:inherit;cursor:pointer}.hint{font-size:14px}.status{margin:12px 0;color:#8d5262}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:30px}.item{border:2px solid #3a403a;background:#fffdf7;padding:12px;box-shadow:4px 4px 0 #bdcab9}.preview{aspect-ratio:16/9;background:#e6e6df;overflow:hidden;display:grid;place-items:center;color:#6d756a}.preview img{width:100%;height:100%;object-fit:cover;display:block}.item b{display:block;line-height:1.4;margin:10px 0 5px}.item label{display:block;font-size:13px}.item input{max-width:100%}.matched{color:#52715b;font-size:13px}.unmatched{color:#8d5262;font-size:13px}@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:560px){main{padding:28px 14px}.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <nav class="top"><a href="index.html">← 返回网站</a><b>閲読器作品記録｜批量封面上传台</b></nav>
+  <main>
+    <h1>批量封面上传台</h1>
+    <p>这里仅列出<strong>尚未有封面</strong>的作品。可一次选择所有图片；若图片文件名与作品名相同，或命名为 <code>work-001.jpg</code>，系统会自动匹配。也可在单张作品下手动选择。</p>
+    <section class="upload-panel">
+      <label><strong>一次选择多张封面</strong><input id="batch" type="file" accept="image/*" multiple></label>
+      <button id="export" type="button">导出上传映射 JSON</button>
+      <p class="hint">图片仍保留在你的电脑中；导出 JSON 后，将<strong>本次选中的图片和 JSON 一起</strong>发给我，我会一次性放进网站。</p>
+      <p id="status" class="status">正在读取作品库…</p>
+    </section>
+    <section id="list" class="grid"></section>
+  </main>
+  <script>
+    const list=document.querySelector('#list'),status=document.querySelector('#status'),chosen={};let works=[];
+    const normalize=s=>String(s).toLowerCase().replace(/\.[^.]+$/,'').replace(/[《》【】〔〕()（）\[\]\s·・，,。.!！?？:：—_-]/g,'');
+    const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const setFile=(id,file)=>{chosen[id]=file;const card=list.querySelector(`[data-id="${id}"]`);if(!card)return;card.querySelector('.preview').innerHTML=`<img src="${URL.createObjectURL(file)}" alt="">`;card.querySelector('.result').innerHTML=`<span class="matched">已选择：${esc(file.name)}</span>`;};
+    function render(){list.innerHTML=works.map(w=>`<article class="item" data-id="${w.id}"><div class="preview">等待上传</div><b>${esc(w.name)}</b><label>选择这张封面 <input class="single" type="file" accept="image/*"></label><p class="result unmatched">尚未选择</p></article>`).join('');list.querySelectorAll('.single').forEach(input=>input.onchange=e=>{const f=e.target.files[0];if(f)setFile(input.closest('.item').dataset.id,f)});status.textContent=`找到 ${works.length} 部尚未有封面的作品。`}
+    fetch('works.html',{cache:'no-store'}).then(r=>r.text()).then(html=>{const doc=document.createElement('div');doc.innerHTML=html;works=[...doc.querySelectorAll('#catalog .card')].map(card=>{const a=card.querySelector('a'),id=a?.getAttribute('href')?.match(/work-\d+/)?.[0];return id&&{id,name:card.querySelector('h3')?.textContent.trim()||id,hasCover:!!card.querySelector('.cover.verified img')};}).filter(Boolean).filter(w=>!w.hasCover);render();}).catch(()=>status.textContent='作品库读取失败，请刷新后重试。');
+    document.querySelector('#batch').onchange=e=>{let matched=0,miss=[];for(const file of e.target.files){const key=normalize(file.name),work=works.find(w=>normalize(w.id)===key||normalize(w.name)===key);if(work){setFile(work.id,file);matched++}else miss.push(file.name)}status.textContent=`已自动匹配 ${matched} 张。${miss.length?'未匹配：'+miss.join('、'):''}`;};
+    document.querySelector('#export').onclick=()=>{const data=Object.fromEntries(Object.entries(chosen).map(([id,file])=>[id,{file:file.name}]));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='new-cover-mapping.json';a.click();URL.revokeObjectURL(a.href)};
+  </script>
+</body>
+</html>
