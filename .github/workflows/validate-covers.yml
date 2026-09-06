@@ -4,11 +4,13 @@ on:
   push:
     paths:
       - "new-cover-mapping.json"
+      - "cover-overrides.json"
       - "assets/covers/**"
       - "scripts/validate-cover-mapping.py"
   pull_request:
     paths:
       - "new-cover-mapping.json"
+      - "cover-overrides.json"
       - "assets/covers/**"
       - "scripts/validate-cover-mapping.py"
   workflow_dispatch:
