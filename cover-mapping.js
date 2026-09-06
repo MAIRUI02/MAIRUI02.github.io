@@ -91,11 +91,24 @@
     const style = document.createElement('style');
     style.textContent = `
       .card.repo-marked .card-link { position: relative; display: block; }
-      .card.repo-marked .card-body { padding-bottom: 48px !important; }
-      .card .repo-badge { position: absolute; right: 14px; bottom: 12px;
-        display: inline-block; padding: 3px 8px; border: 1px solid #b98b42;
-        background: #302016; color: #ffe0a0; font: 600 12px/1.4 Georgia, serif;
-        letter-spacing: .08em; white-space: nowrap; pointer-events: none; }
+      .card.repo-marked { --repo-light: #83a766; --repo-dark: #48663b; --repo-ink: #fffce8; }
+      .masterpiece-gallery .card.repo-marked {
+        --repo-light: #85483e; --repo-dark: #48221e; --repo-ink: #f6d998;
+      }
+      .celebrity-salon .card.repo-marked, [data-archive-view="celebrity"] .card.repo-marked {
+        --repo-light: #edacc8; --repo-dark: #ba5889; --repo-ink: #fff8fc;
+      }
+      .card.repo-marked .card-body { padding-bottom: 80px !important; }
+      .card .repo-badge { position: absolute; right: 0; bottom: 0;
+        display: block; width: 72px; height: 72px; padding: 0; border: 0;
+        clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        background: linear-gradient(135deg, var(--repo-light), var(--repo-dark));
+        color: var(--repo-ink); pointer-events: none; }
+      .card .repo-badge::before { content: ''; position: absolute; inset: 0;
+        background: linear-gradient(135deg, transparent 48%, #ffffff55 49%, transparent 51%); }
+      .card .repo-badge__label { position: absolute; right: 6px; bottom: 10px;
+        font: 600 12px/1 Georgia, serif; letter-spacing: .06em;
+        white-space: nowrap; text-shadow: 0 1px 1px #0003; }
     `;
     document.head.appendChild(style);
     function markCards() {
@@ -106,7 +119,11 @@
         if (link.querySelector('.repo-badge')) return;
         const badge = document.createElement('span');
         badge.className = 'repo-badge';
-        badge.textContent = '【repo】';
+        const label = document.createElement('span');
+        label.className = 'repo-badge__label';
+        label.textContent = 'repo';
+        label.setAttribute('aria-hidden', 'true');
+        badge.appendChild(label);
         badge.title = '已写 Repo';
         badge.setAttribute('aria-label', '已写 Repo');
         link.closest('.card').classList.add('repo-marked');
