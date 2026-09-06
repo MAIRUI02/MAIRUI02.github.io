@@ -22,14 +22,15 @@
     <section id="list" class="grid"></section>
   </main>
   <script>
-    const list=document.querySelector('#list'),status=document.querySelector('#status'),chosen={};let works=[];
+    const list=document.querySelector('#list'),status=document.querySelector('#status'),chosen={},existing={};let works=[];
     const normalize=s=>String(s).toLowerCase().replace(/\.[^.]+$/,'').replace(/[《》【】〔〕()（）\[\]\s·・，,。.!！?？:：—_-]/g,'');
     const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const setFile=(id,file)=>{chosen[id]=file;const card=list.querySelector(`[data-id="${id}"]`);if(!card)return;card.querySelector('.preview').innerHTML=`<img src="${URL.createObjectURL(file)}" alt="">`;card.querySelector('.result').innerHTML=`<span class="matched">已选择：${esc(file.name)}</span>`;};
     function render(){list.innerHTML=works.map(w=>`<article class="item" data-id="${w.id}"><div class="preview">等待上传</div><b>${esc(w.name)}</b><label>选择这张封面 <input class="single" type="file" accept="image/*"></label><p class="result unmatched">尚未选择</p></article>`).join('');list.querySelectorAll('.single').forEach(input=>input.onchange=e=>{const f=e.target.files[0];if(f)setFile(input.closest('.item').dataset.id,f)});status.textContent=`找到 ${works.length} 部尚未有封面的作品。`}
+    fetch('new-cover-mapping.json',{cache:'no-store'}).then(r=>r.json()).then(data=>Object.assign(existing,data)).catch(()=>{});
     fetch('works.html',{cache:'no-store'}).then(r=>r.text()).then(html=>{const doc=document.createElement('div');doc.innerHTML=html;works=[...doc.querySelectorAll('#catalog .card')].map(card=>{const a=card.querySelector('a'),id=a?.getAttribute('href')?.match(/work-\d+/)?.[0];return id&&{id,name:card.querySelector('h3')?.textContent.trim()||id,hasCover:!!card.querySelector('.cover.verified img')};}).filter(Boolean).filter(w=>!w.hasCover);render();}).catch(()=>status.textContent='作品库读取失败，请刷新后重试。');
     document.querySelector('#batch').onchange=e=>{let matched=0,miss=[];for(const file of e.target.files){const key=normalize(file.name),work=works.find(w=>normalize(w.id)===key||normalize(w.name)===key);if(work){setFile(work.id,file);matched++}else miss.push(file.name)}status.textContent=`已自动匹配 ${matched} 张。${miss.length?'未匹配：'+miss.join('、'):''}`;};
-    document.querySelector('#export').onclick=()=>{const data=Object.fromEntries(Object.entries(chosen).map(([id,file])=>[id,{file:file.name}]));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='new-cover-mapping.json';a.click();URL.revokeObjectURL(a.href)};
+    document.querySelector('#export').onclick=()=>{const data={...existing,...Object.fromEntries(Object.entries(chosen).map(([id,file])=>[id,{file:file.name}]))};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='new-cover-mapping.json';a.click();URL.revokeObjectURL(a.href)};
   </script>
 </body>
 </html>
