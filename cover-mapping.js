@@ -78,3 +78,56 @@
     init();
   }
 })();
+
+/* Repo badges: generated from the original Notion database's Repo URL property. */
+(() => {
+  if (window.__archiveRepoBadges) return;
+  window.__archiveRepoBadges = true;
+  const scriptUrl = document.currentScript?.src || new URL('cover-mapping.js', location.href).href;
+  const mappingUrl = new URL('repo-mapping.json', scriptUrl);
+
+  function apply(mapping) {
+    if (!mapping || typeof mapping !== 'object' || Array.isArray(mapping)) return;
+    const style = document.createElement('style');
+    style.textContent = `
+      .card.repo-marked .card-link { position: relative; display: block; }
+      .card.repo-marked .card-body { padding-bottom: 48px !important; }
+      .card .repo-badge { position: absolute; right: 14px; bottom: 12px;
+        display: inline-block; padding: 3px 8px; border: 1px solid #b98b42;
+        background: #302016; color: #ffe0a0; font: 600 12px/1.4 Georgia, serif;
+        letter-spacing: .08em; white-space: nowrap; pointer-events: none; }
+    `;
+    document.head.appendChild(style);
+    function markCards() {
+      document.querySelectorAll('.card .card-link[href]').forEach(link => {
+        const id = new URL(link.getAttribute('href'), location.href).pathname.match(/\/(work-\d+)\.html$/i)?.[1];
+        const entry = id && mapping[id];
+        if (!entry || typeof entry.url !== 'string' || !/^https?:\/\//i.test(entry.url)) return;
+        if (link.querySelector('.repo-badge')) return;
+        const badge = document.createElement('span');
+        badge.className = 'repo-badge';
+        badge.textContent = '【repo】';
+        badge.title = '已写 Repo';
+        badge.setAttribute('aria-label', '已写 Repo');
+        link.closest('.card').classList.add('repo-marked');
+        link.appendChild(badge);
+      });
+    }
+    markCards();
+    let queued = false;
+    new MutationObserver(() => {
+      if (queued) return;
+      queued = true;
+      queueMicrotask(() => { queued = false; markCards(); });
+    }).observe(document.querySelector('main') || document.body, { childList: true, subtree: true });
+  }
+  async function init() {
+    try {
+      const response = await fetch(mappingUrl, { cache: 'no-store' });
+      if (!response.ok) throw Error('HTTP ' + response.status);
+      apply(await response.json());
+    } catch (error) { console.warn('Repo 标记加载失败：', error); }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init, { once:true });
+  else init();
+})();
