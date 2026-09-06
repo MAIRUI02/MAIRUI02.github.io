@@ -6,7 +6,7 @@
   <title>封面微调台｜閲読器作品記録</title>
   <style>
     :root{--ink:#28352d;--paper:#fffaf0;--mint:#dce8d2;--line:#425844;--accent:#a25964}*{box-sizing:border-box}
-    body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 "Noto Serif SC",serif}.bar{padding:16px max(5vw,22px);border-bottom:3px solid var(--line);background:#eff5e6;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.bar a{color:inherit}.wrap{max-width:1640px;margin:auto;padding:42px 24px 90px}h1{font-size:clamp(30px,5vw,50px);margin:0}.lead{max-width:760px}.panel{border:3px solid var(--line);background:var(--mint);padding:20px;box-shadow:6px 6px 0 #8da181}.button{display:inline-block;border:2px solid var(--line);background:#fffdf3;padding:9px 14px;color:inherit;cursor:pointer;font:inherit}.button.primary{background:#52715b;color:#fff}.note{font-size:14px;margin-bottom:0}.list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:32px}.item{border:2px solid var(--line);background:#fffdf6;padding:12px;box-shadow:3px 3px 0 #c2d0bb}.preview{aspect-ratio:16/9;background:#e6e6df;overflow:hidden;display:grid;place-items:center;color:#6d756a}.preview img{width:100%;height:100%;object-fit:cover;display:block}.item b{display:block;line-height:1.35;margin:10px 0 4px}.item label{display:block;font-size:13px;margin-top:9px}.item input{width:100%}.values{font:13px/1.4 ui-monospace,monospace;color:#566457;margin-top:7px}.changed{outline:3px solid #d69762;outline-offset:2px}@media(max-width:900px){.list{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){.wrap{padding:28px 14px}.panel{padding:16px}.list{grid-template-columns:1fr}}
+    body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 "Noto Serif SC",serif}.bar{padding:16px max(5vw,22px);border-bottom:3px solid var(--line);background:#eff5e6;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.bar a{color:inherit}.wrap{max-width:1640px;margin:auto;padding:42px 24px 90px}h1{font-size:clamp(30px,5vw,50px);margin:0}.lead{max-width:760px}.panel{border:3px solid var(--line);background:var(--mint);padding:20px;box-shadow:6px 6px 0 #8da181}.button{display:inline-block;border:2px solid var(--line);background:#fffdf3;padding:9px 14px;color:inherit;cursor:pointer;font:inherit}.button.primary{background:#52715b;color:#fff}.note{font-size:14px;margin-bottom:0}.list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:32px}.item{border:2px solid var(--line);background:#fffdf6;padding:12px;box-shadow:3px 3px 0 #c2d0bb}.preview{aspect-ratio:16/9;background:#e6e6df;overflow:hidden;position:relative;color:#6d756a}.preview img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}.item b{display:block;line-height:1.35;margin:10px 0 4px}.item label{display:block;font-size:13px;margin-top:9px}.item input{width:100%}.values{font:13px/1.4 ui-monospace,monospace;color:#566457;margin-top:7px}.changed{outline:3px solid #d69762;outline-offset:2px}@media(max-width:900px){.list{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:680px){.wrap{padding:28px 14px}.panel{padding:16px}.list{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -41,9 +41,11 @@
         const sync = () => {
           const id = card.dataset.id, x = Number(card.querySelector('.x').value), y = Number(card.querySelector('.y').value), zoom = Number(card.querySelector('.zoom').value);
           const image = card.querySelector('img');
-          image.style.objectPosition = `${x}% ${y}%`;
-          image.style.transformOrigin = `${x}% ${y}%`;
-          image.style.transform = `scale(${zoom / 100})`;
+          // Set the complete rendered crop rule directly.  The preview is the
+          // same 16:9 overflow box used by the catalogue cards.
+          image.style.setProperty('object-position', `${x}% ${y}%`, 'important');
+          image.style.setProperty('transform-origin', `${x}% ${y}%`, 'important');
+          image.style.setProperty('transform', `scale(${zoom / 100})`, 'important');
           card.querySelector('.values').textContent = `位置：${x}% / ${y}%　缩放：${zoom}%`;
           const changed = x !== Number(card.dataset.baseX) || y !== Number(card.dataset.baseY) || zoom !== Number(card.dataset.baseZoom);
           card.classList.toggle('changed', changed);
