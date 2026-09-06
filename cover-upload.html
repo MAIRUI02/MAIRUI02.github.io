@@ -1,1 +1,72 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>批量封面上传台｜閲読器作品記録</title><style>:root{--ink:#28352d;--paper:#fffaf0;--mint:#dce8d2;--line:#425844}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 "Noto Serif SC",serif}.bar{padding:16px max(5vw,22px);border-bottom:3px solid var(--line);background:#eff5e6;display:flex;justify-content:space-between}.bar a{color:inherit}.wrap{max-width:1180px;margin:auto;padding:46px 24px 90px}h1{font-size:clamp(31px,5vw,52px);margin:0}.lead{max-width:700px}.panel{border:3px solid var(--line);background:var(--mint);padding:22px;box-shadow:6px 6px 0 #8da181}.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.button,.actions label{display:inline-block;border:2px solid var(--line);background:#fffdf3;padding:9px 14px;color:inherit;cursor:pointer;font:inherit}.button.primary{background:#52715b;color:white}.hint{font-size:13px}.summary{margin:14px 0 0}.unmatched{margin-top:20px;padding:13px;border:2px dashed #7b8b70;background:#fffaf0}.unmatched[hidden]{display:none}.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:17px;margin-top:32px}.item{border:2px solid var(--line);background:#fffdf6;padding:12px;box-shadow:3px 3px 0 #c2d0bb}.preview{aspect-ratio:16/9;background:#e6e6df;overflow:hidden;display:grid;place-items:center;color:#6d756a}.preview img{width:100%;height:100%;object-fit:cover}.item b{display:block;line-height:1.35;margin-top:9px}.item small{display:block;color:#617061;margin:5px 0}.item label{display:block;font-size:13px;margin-top:8px}.item input[type=file],.item input[type=range]{width:100%}.ok{color:#2d7650}.pending{color:#8a5b32}@media(max-width:680px){.wrap{padding:28px 14px}.panel{padding:16px}.list{grid-template-columns:1fr}}</style><body><nav class="bar"><a href="index.html">← 返回网站</a><span>閲読器作品記録 · COVER UPLOAD</span></nav><main class="wrap"><h1>批量封面上传台</h1><p class="lead">一次选择所有封面。文件名若含作品名，或命名为 <code>work-001.jpg</code>，系统会自动配对；每张卡仍可单独替换及调整裁剪位置。</p><section class="panel"><div class="actions"><label class="button primary">选择多张封面<input id="batch" type="file" accept="image/*" multiple hidden></label><button id="export" class="button">导出封面映射 JSON</button><button id="clear" class="button">清空本机草稿</button></div><p class="hint">提示：浏览器不能直接替你上传到已部署网站。导出 JSON 后，把本次图片和 JSON 一起发给我，我会一次合入部署文件；或以后用一键更新工具保留它们。</p><p id="summary" class="summary">正在读取作品库…</p><div id="unmatched" class="unmatched" hidden></div></section><section id="list" class="list"></section></main><script>const list=document.getElementById('list'),batch=document.getElementById('batch'),summary=document.getElementById('summary'),unmatched=document.getElementById('unmatched');const state=JSON.parse(localStorage.getItem('ydq-cover-batch')||'{}'),files=new Map();let works=[];const clean=s=>String(s||'').toLowerCase().replace(/[《》【】\[\]()（）·•｜|\s_—-]/g,'');const save=()=>localStorage.setItem('ydq-cover-batch',JSON.stringify(state));const render=()=>{list.innerHTML=works.map(w=>{const e=state[w.id]||{},current=e.url||w.cover;return `<article class="item" data-id="${w.id}"><div class="preview">${current?`<img src="${current}" style="object-position:${e.position||'50% 50%'}">`:'<span>等待上传封面</span>'}</div><b>${w.name}</b><small class="${e.file?'ok':'pending'}">${e.file?'已选择：'+e.file:'尚未选择图片'}</small><label>替换此作品封面<input class="single" type="file" accept="image/*"></label><label>横向裁剪<input class="x" type="range" min="0" max="100" value="${e.x??50}"></label><label>纵向裁剪<input class="y" type="range" min="0" max="100" value="${e.y??50}"></label></article>`}).join('');list.querySelectorAll('.item').forEach(card=>{const id=card.dataset.id,apply=()=>{const x=card.querySelector('.x').value,y=card.querySelector('.y').value;state[id]={...(state[id]||{}),x,y,position:`${x}% ${y}%`};card.querySelector('img')?.style.setProperty('object-position',state[id].position);save()};card.querySelector('.x').oninput=apply;card.querySelector('.y').oninput=apply;card.querySelector('.single').onchange=e=>attach(id,e.target.files[0])});const chosen=Object.values(state).filter(x=>x.file).length;summary.textContent=`已配对 ${chosen} / ${works.length} 部作品。可直接一次选择多张图片。`};function attach(id,file){if(!file)return;files.set(id,file);state[id]={...(state[id]||{}),file:file.name,url:URL.createObjectURL(file)};save();render()}function findWork(file){const name=clean(file.name.replace(/\.[^.]+$/,''));const numbered=file.name.match(/work[-_ ]?(\d{1,3})/i);if(numbered)return works.find(w=>w.id===`work-${numbered[1].padStart(3,'0')}`);return works.find(w=>name.includes(clean(w.name))||clean(w.name).includes(name))}batch.onchange=e=>{const missed=[];[...e.target.files].forEach(file=>{const match=findWork(file);if(match)attach(match.id,file);else missed.push(file.name)});unmatched.hidden=!missed.length;unmatched.textContent=missed.length?'未自动匹配：'+missed.join('、')+'。请用文件名改成作品名或 work-编号 后重新选择，或在作品卡里单独上传。':''};document.getElementById('export').onclick=()=>{const data=Object.fromEntries([...document.querySelectorAll('.item')].map(card=>{const id=card.dataset.id,v=state[id]||{},x=card.querySelector('.x')?.value??v.x??50,y=card.querySelector('.y')?.value??v.y??50,zoom=card.querySelector('.zoom')?.value??100;return [id,{file:v.file||'',position:`${x}% `${y}%`,zoom:`${zoom}%`}]}).filter(([,v])=>v.file||v.position!=='50% 50%'||v.zoom!=='100%'));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='cover-overrides.json';a.click()};document.getElementById('clear').onclick=()=>{if(confirm('清空这台电脑中暂存的封面匹配吗？')){localStorage.removeItem('ydq-cover-batch');location.reload()}};fetch('index.html').then(r=>r.text()).then(html=>{const doc=document.createElement('div');doc.innerHTML=html;works=[...doc.querySelectorAll('#catalog .card')].map(card=>{const link=card.querySelector('a'),image=card.querySelector('img');return{id:link.getAttribute('href').match(/work-\d+/)[0],name:card.querySelector('h3').textContent.trim(),cover:image?.getAttribute('src')||''}});render()}).catch(()=>summary.textContent='读取失败：请通过 http://localhost:8080/cover-upload.html 打开。');</script><script src="cover-live-preview.js"></script></body>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>封面微调台｜閲読器作品記録</title>
+  <style>
+    :root{--ink:#28352d;--paper:#fffaf0;--mint:#dce8d2;--line:#425844;--accent:#a25964}*{box-sizing:border-box}
+    body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 "Noto Serif SC",serif}.bar{padding:16px max(5vw,22px);border-bottom:3px solid var(--line);background:#eff5e6;display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}.bar a{color:inherit}.wrap{max-width:1180px;margin:auto;padding:42px 24px 90px}h1{font-size:clamp(30px,5vw,50px);margin:0}.lead{max-width:760px}.panel{border:3px solid var(--line);background:var(--mint);padding:20px;box-shadow:6px 6px 0 #8da181}.button{display:inline-block;border:2px solid var(--line);background:#fffdf3;padding:9px 14px;color:inherit;cursor:pointer;font:inherit}.button.primary{background:#52715b;color:#fff}.note{font-size:14px;margin-bottom:0}.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px;margin-top:32px}.item{border:2px solid var(--line);background:#fffdf6;padding:12px;box-shadow:3px 3px 0 #c2d0bb}.preview{aspect-ratio:16/9;background:#e6e6df;overflow:hidden;display:grid;place-items:center;color:#6d756a}.preview img{width:100%;height:100%;object-fit:cover;display:block}.item b{display:block;line-height:1.35;margin:10px 0 4px}.item label{display:block;font-size:13px;margin-top:9px}.item input{width:100%}.values{font:13px/1.4 ui-monospace,monospace;color:#566457;margin-top:7px}.changed{outline:3px solid #d69762;outline-offset:2px}@media(max-width:680px){.wrap{padding:28px 14px}.panel{padding:16px}.list{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <nav class="bar"><a href="index.html">← 返回网站</a><span>閲読器作品記録 · COVER TUNING</span></nav>
+  <main class="wrap">
+    <h1>封面微调台</h1>
+    <p class="lead">拖动每张作品下方的三个滑条，预览会立即变化。完成后点击「导出微调文件」，将下载的 <code>cover-overrides.json</code> 发给我即可；我会把它合入网站，不需要你逐张描述数值。</p>
+    <section class="panel">
+      <button class="button primary" id="export">导出微调文件</button>
+      <button class="button" id="reset">还原本机草稿</button>
+      <p class="note">横向：左右移动主体；纵向：上下移动主体；缩放：放大细节。只有被改动的作品会写入导出文件。</p>
+    </section>
+    <section id="list" class="list"></section>
+  </main>
+  <script>
+    const list = document.querySelector('#list');
+    const key = 'ydq-cover-tuning-v1';
+    const saved = JSON.parse(localStorage.getItem(key) || '{}');
+    let works = [];
+    const defaultFocus = { x: 50, y: 20, zoom: 100 };
+    const esc = value => String(value).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    function entry(id) { return { ...defaultFocus, ...(saved[id] || {}) }; }
+    function draw() {
+      list.innerHTML = works.map(w => {
+        const v = entry(w.id);
+        return `<article class="item" data-id="${w.id}"><div class="preview"><img src="${esc(w.cover)}" alt=""></div><b>${esc(w.name)}</b><label>横向裁剪 <input class="x" type="range" min="0" max="100" value="${v.x}"></label><label>纵向裁剪 <input class="y" type="range" min="0" max="100" value="${v.y}"></label><label>缩放 <input class="zoom" type="range" min="100" max="155" value="${v.zoom}"></label><div class="values"></div></article>`;
+      }).join('');
+      list.querySelectorAll('.item').forEach(card => {
+        const sync = () => {
+          const id = card.dataset.id, x = Number(card.querySelector('.x').value), y = Number(card.querySelector('.y').value), zoom = Number(card.querySelector('.zoom').value);
+          const image = card.querySelector('img');
+          image.style.objectPosition = `${x}% ${y}%`;
+          image.style.transformOrigin = `${x}% ${y}%`;
+          image.style.transform = `scale(${zoom / 100})`;
+          card.querySelector('.values').textContent = `位置：${x}% / ${y}%　缩放：${zoom}%`;
+          const changed = x !== defaultFocus.x || y !== defaultFocus.y || zoom !== defaultFocus.zoom;
+          card.classList.toggle('changed', changed);
+          if (changed) saved[id] = { x, y, zoom, position: `${x}% ${y}%` }; else delete saved[id];
+          localStorage.setItem(key, JSON.stringify(saved));
+        };
+        card.querySelectorAll('input').forEach(input => input.addEventListener('input', sync));
+        sync();
+      });
+    }
+    fetch('index.html').then(r => r.text()).then(html => {
+      const doc = document.createElement('div'); doc.innerHTML = html;
+      works = [...doc.querySelectorAll('#catalog .card')].map(card => {
+        const link = card.querySelector('a'), image = card.querySelector('img');
+        return { id: link.getAttribute('href').match(/work-\d+/)[0], name: card.querySelector('h3').textContent.trim(), cover: image?.getAttribute('src') || '' };
+      });
+      draw();
+    }).catch(() => { list.innerHTML = '<p>作品库读取失败，请从已部署的网站打开此页面。</p>'; });
+    document.querySelector('#export').onclick = () => {
+      const data = Object.fromEntries(Object.entries(saved));
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'cover-overrides.json'; a.click(); URL.revokeObjectURL(a.href);
+    };
+    document.querySelector('#reset').onclick = () => {
+      if (confirm('要清空这台设备暂存的所有微调吗？')) { localStorage.removeItem(key); location.reload(); }
+    };
+  </script>
+</body>
+</html>
