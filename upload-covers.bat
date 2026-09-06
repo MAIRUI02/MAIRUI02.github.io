@@ -49,7 +49,7 @@ if errorlevel 1 (
 
 echo.
 echo [3/4] 加入封面与映射文件...
-git add new-cover-mapping.json assets/covers
+git add new-cover-mapping.json cover-overrides.json assets/covers
 git diff --cached --quiet
 if not errorlevel 1 (
   echo 没有需要上传的封面变更。
