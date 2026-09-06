@@ -1,0 +1,44 @@
+name: Validate cover mapping
+
+on:
+  push:
+    paths:
+      - "new-cover-mapping.json"
+      - "assets/covers/**"
+      - ".github/workflows/validate-cover-mapping.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate mapping JSON and cover files
+        shell: python
+        run: |
+          import json
+          from pathlib import Path
+
+          mapping_path = Path("new-cover-mapping.json")
+          if not mapping_path.exists():
+              raise SystemExit("new-cover-mapping.json does not exist")
+
+          mapping = json.loads(mapping_path.read_text(encoding="utf-8"))
+          errors = []
+
+          for work_id, entry in mapping.items():
+              if not isinstance(entry, dict) or not entry.get("file"):
+                  errors.append(f"{work_id}: missing file")
+                  continue
+
+              cover = Path("assets/covers") / entry["file"]
+              if not cover.is_file():
+                  errors.append(f"{work_id}: missing {cover}")
+
+          if errors:
+              print("\n".join(errors))
+              raise SystemExit(f"Validation failed: {len(errors)} problem(s)")
+
+          print(f"OK: {len(mapping)} mapping entries validated")
