@@ -1,0 +1,29 @@
+name: Validate cover mapping
+
+on:
+  push:
+    paths:
+      - "new-cover-mapping.json"
+      - "assets/covers/**"
+      - "scripts/validate-cover-mapping.py"
+  pull_request:
+    paths:
+      - "new-cover-mapping.json"
+      - "assets/covers/**"
+      - "scripts/validate-cover-mapping.py"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Validate cover mapping
+        run: python scripts/validate-cover-mapping.py
