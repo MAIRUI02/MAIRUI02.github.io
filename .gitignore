@@ -1,0 +1,6 @@
+# Browser-only cover editor drafts
+cover-overrides.json
+
+# System files
+.DS_Store
+Thumbs.db

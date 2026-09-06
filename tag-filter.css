@@ -1,0 +1,2 @@
+.card .chips span { cursor:pointer; transition:background .12s ease,transform .12s ease; }
+.card .chips span:hover,.card .chips span:focus-visible { background:#fff7d5!important; outline:2px solid #526c58; outline-offset:1px; transform:translateY(-1px); }

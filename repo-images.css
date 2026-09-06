@@ -1,0 +1,16 @@
+/* Repo screenshots are reading material, not thumbnails. */
+.repo .repo-figure {
+  margin: 32px 0;
+}
+
+.repo .repo-figure a {
+  display: block;
+  cursor: zoom-in;
+}
+
+.repo .repo-figure img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}

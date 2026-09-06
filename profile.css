@@ -1,0 +1,40 @@
+/* Homepage profile: an original pixel-inspired archive card. */
+.profile {
+  margin: 0 auto 68px;
+  max-width: 980px;
+}
+.profile-window {
+  position: relative;
+  overflow: hidden;
+  border: 3px solid var(--line);
+  background: #f6f1df;
+  box-shadow: 7px 7px 0 #687b70;
+}
+.profile-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-bottom: 3px solid var(--line);
+  background: #cfdfbd;
+  font: 12px/1 ui-monospace, monospace;
+  letter-spacing: .08em;
+}
+.profile-titlebar i { width: 9px; height: 9px; border: 1px solid var(--line); background: #d87872; display: inline-block; }
+.profile-inner { display: grid; grid-template-columns: 180px 1fr; gap: 25px; padding: 22px; }
+.profile-avatar { display: grid; place-items: center; min-height: 180px; overflow: hidden; border: 3px solid var(--line); background: linear-gradient(135deg,#e9bfc0 0 48%,#d4e0bb 48%); box-shadow: inset 0 0 0 6px #f8f4e9; }
+.profile-avatar img { display:block; width:100%; height:100%; min-height:180px; object-fit:cover; object-position:center; }
+.profile-meter { margin-top: 14px; font: 12px ui-monospace, monospace; }
+.profile-meter b { display:inline-block; width: 34px; }
+.profile-meter span { display:inline-block; width: calc(100% - 42px); height: 13px; border: 2px solid var(--line); background: linear-gradient(90deg,#e99f8c 0 78%,#f8f4e9 78%); vertical-align: middle; }
+.profile-meter + .profile-meter span { background: linear-gradient(90deg,#a8c48e 0 91%,#f8f4e9 91%); }
+.profile-copy h2 { margin: 0; font: 700 clamp(26px,4vw,42px)/1.05 ui-monospace,monospace; letter-spacing: -.08em; }
+.profile-copy .profile-role { margin: 5px 0 16px; color: var(--wine); font: 12px ui-monospace,monospace; letter-spacing: .14em; }
+.profile-copy > p { margin: 0 0 16px; font-size: 16px; }
+.profile-facts { display: grid; grid-template-columns: 86px 1fr; margin: 0; border-top: 2px solid var(--line); }
+.profile-facts dt,.profile-facts dd { padding: 8px 5px; border-bottom: 1px solid #98a18f; }
+.profile-facts dt { font: 11px ui-monospace,monospace; color: var(--wine); }
+.profile-facts dd { font-size: 14px; }
+.profile-chips { display:flex; flex-wrap:wrap; gap:7px; margin-top:15px; }
+.profile-chips span { border:2px solid var(--line); background:#e1ebd3; box-shadow:2px 2px 0 #93a688; padding:3px 7px; font:11px ui-monospace,monospace; }
+@media(max-width:620px){.profile-inner{grid-template-columns:1fr;padding:16px}.profile-avatar{min-height:130px}.profile-meter{max-width:220px}.profile-facts{grid-template-columns:72px 1fr}}
