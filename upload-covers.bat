@@ -29,7 +29,17 @@ if not exist "new-cover-mapping.json" (
   exit /b 1
 )
 
-echo [1/4] 检查映射文件...
+echo [1/5] 合并新的封面映射...
+python scripts\merge-cover-mapping.py
+if errorlevel 1 (
+  echo.
+  echo [停止] 映射合并失败，请按上面的提示修正。
+  pause
+  exit /b 1
+)
+
+echo.
+echo [2/5] 检查映射文件...
 python scripts\validate-cover-mapping.py
 if errorlevel 1 (
   echo.
@@ -39,7 +49,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [2/4] 同步 GitHub 最新版本...
+echo [3/5] 同步 GitHub 最新版本...
 git pull --rebase
 if errorlevel 1 (
   echo [错误] git pull 失败，请先处理 Git 冲突。
@@ -48,8 +58,8 @@ if errorlevel 1 (
 )
 
 echo.
-echo [3/4] 加入封面与映射文件...
-git add new-cover-mapping.json cover-overrides.json assets/covers
+echo [4/5] 加入封面与映射文件...
+git add new-cover-mapping.json cover-overrides.json assets/covers mapping-imported
 git diff --cached --quiet
 if not errorlevel 1 (
   echo 没有需要上传的封面变更。
@@ -68,7 +78,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [4/4] 上传到 GitHub...
+echo [5/5] 上传到 GitHub...
 git push
 if errorlevel 1 (
   echo [错误] push 失败。
