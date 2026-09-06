@@ -28,15 +28,14 @@
     const key = 'ydq-cover-tuning-v1';
     const saved = JSON.parse(localStorage.getItem(key) || '{}');
     let works = [];
-    const defaultFocus = { x: 50, y: 20, zoom: 100 };
     const esc = value => String(value).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    function entry(id) { return { ...defaultFocus, ...(saved[id] || {}) }; }
+    function entry(work) { return { x: work.x, y: work.y, zoom: work.zoom, ...(saved[work.id] || {}) }; }
     function draw() {
       const query = search.value.trim().toLowerCase();
       const visibleWorks = query ? works.filter(w => w.name.toLowerCase().includes(query)) : works;
       list.innerHTML = visibleWorks.map(w => {
-        const v = entry(w.id);
-        return `<article class="item" data-id="${w.id}"><div class="preview"><img src="${esc(w.cover)}" alt=""></div><b>${esc(w.name)}</b><label>横向裁剪 <input class="x" type="range" min="0" max="100" value="${v.x}"></label><label>纵向裁剪 <input class="y" type="range" min="0" max="100" value="${v.y}"></label><label>缩放 <input class="zoom" type="range" min="100" max="155" value="${v.zoom}"></label><div class="values"></div></article>`;
+        const v = entry(w);
+        return `<article class="item" data-id="${w.id}" data-base-x="${w.x}" data-base-y="${w.y}" data-base-zoom="${w.zoom}"><div class="preview"><img src="${esc(w.cover)}" alt=""></div><b>${esc(w.name)}</b><label>横向裁剪 <input class="x" type="range" min="0" max="100" value="${v.x}"></label><label>纵向裁剪 <input class="y" type="range" min="0" max="100" value="${v.y}"></label><label>缩放 <input class="zoom" type="range" min="100" max="155" value="${v.zoom}"></label><div class="values"></div></article>`;
       }).join('');
       list.querySelectorAll('.item').forEach(card => {
         const sync = () => {
@@ -46,12 +45,17 @@
           image.style.transformOrigin = `${x}% ${y}%`;
           image.style.transform = `scale(${zoom / 100})`;
           card.querySelector('.values').textContent = `位置：${x}% / ${y}%　缩放：${zoom}%`;
-          const changed = x !== defaultFocus.x || y !== defaultFocus.y || zoom !== defaultFocus.zoom;
+          const changed = x !== Number(card.dataset.baseX) || y !== Number(card.dataset.baseY) || zoom !== Number(card.dataset.baseZoom);
           card.classList.toggle('changed', changed);
           if (changed) saved[id] = { x, y, zoom, position: `${x}% ${y}%` }; else delete saved[id];
           localStorage.setItem(key, JSON.stringify(saved));
         };
-        card.querySelectorAll('input').forEach(input => input.addEventListener('input', sync));
+        card.querySelectorAll('input').forEach(input => input.addEventListener('input', () => {
+          // A 16:9 image has no spare edge to move until it is enlarged.
+          // Give panning a visible area automatically, while retaining manual control.
+          if ((input.classList.contains('x') || input.classList.contains('y')) && card.querySelector('.zoom').value === '100') card.querySelector('.zoom').value = '110';
+          sync();
+        }));
         sync();
       });
     }
@@ -59,7 +63,9 @@
       const doc = document.createElement('div'); doc.innerHTML = html;
       works = [...doc.querySelectorAll('#catalog .card')].map(card => {
         const link = card.querySelector('a'), image = card.querySelector('img');
-        return { id: link.getAttribute('href').match(/work-\d+/)[0], name: card.querySelector('h3').textContent.trim(), cover: image?.getAttribute('src') || '' };
+        const pos = (image?.style.objectPosition || '50% 20%').match(/([\d.]+)%\s+([\d.]+)%/) || [,50,20];
+        const scale = (image?.style.transform || '').match(/scale\(([\d.]+)\)/);
+        return { id: link.getAttribute('href').match(/work-\d+/)[0], name: card.querySelector('h3').textContent.trim(), cover: image?.getAttribute('src') || '', x: Number(pos[1]), y: Number(pos[2]), zoom: Math.round((scale ? Number(scale[1]) : 1) * 100) };
       });
       draw();
     }).catch(() => { list.innerHTML = '<p>作品库读取失败，请从已部署的网站打开此页面。</p>'; });
