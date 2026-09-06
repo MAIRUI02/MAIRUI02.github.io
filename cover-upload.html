@@ -15,6 +15,7 @@
     <h1>封面微调台</h1>
     <p class="lead">拖动每张作品下方的三个滑条，预览会立即变化。完成后点击「导出微调文件」，将下载的 <code>cover-overrides.json</code> 发给我即可；我会把它合入网站，不需要你逐张描述数值。</p>
     <section class="panel">
+      <input id="work-search" type="search" placeholder="搜索作品名，例如：换乘恋爱" aria-label="搜索作品名">
       <button class="button primary" id="export">导出微调文件</button>
       <button class="button" id="reset">还原本机草稿</button>
       <p class="note">横向：左右移动主体；纵向：上下移动主体；缩放：放大细节。只有被改动的作品会写入导出文件。</p>
@@ -23,6 +24,7 @@
   </main>
   <script>
     const list = document.querySelector('#list');
+    const search = document.querySelector('#work-search');
     const key = 'ydq-cover-tuning-v1';
     const saved = JSON.parse(localStorage.getItem(key) || '{}');
     let works = [];
@@ -30,7 +32,9 @@
     const esc = value => String(value).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
     function entry(id) { return { ...defaultFocus, ...(saved[id] || {}) }; }
     function draw() {
-      list.innerHTML = works.map(w => {
+      const query = search.value.trim().toLowerCase();
+      const visibleWorks = query ? works.filter(w => w.name.toLowerCase().includes(query)) : works;
+      list.innerHTML = visibleWorks.map(w => {
         const v = entry(w.id);
         return `<article class="item" data-id="${w.id}"><div class="preview"><img src="${esc(w.cover)}" alt=""></div><b>${esc(w.name)}</b><label>横向裁剪 <input class="x" type="range" min="0" max="100" value="${v.x}"></label><label>纵向裁剪 <input class="y" type="range" min="0" max="100" value="${v.y}"></label><label>缩放 <input class="zoom" type="range" min="100" max="155" value="${v.zoom}"></label><div class="values"></div></article>`;
       }).join('');
@@ -59,6 +63,7 @@
       });
       draw();
     }).catch(() => { list.innerHTML = '<p>作品库读取失败，请从已部署的网站打开此页面。</p>'; });
+    search.addEventListener('input', draw);
     document.querySelector('#export').onclick = () => {
       const data = Object.fromEntries(Object.entries(saved));
       const blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
