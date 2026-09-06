@@ -4,6 +4,7 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 MAPPING = ROOT / "new-cover-mapping.json"
+OVERRIDES = ROOT / "cover-overrides.json"
 COVERS = ROOT / "assets" / "covers"
 
 def fail(message: str) -> None:
@@ -59,3 +60,43 @@ if invalid or missing:
     sys.exit(1)
 
 print(f"[OK] 映射检查通过：{len(data)} 条记录，所有封面文件均存在。")
+
+
+# Optional crop overrides validation
+if OVERRIDES.exists():
+    try:
+        overrides = json.loads(OVERRIDES.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        fail(f"cover-overrides.json 格式错误：第 {exc.lineno} 行，第 {exc.colno} 列：{exc.msg}")
+
+    if not isinstance(overrides, dict):
+        fail("cover-overrides.json 最外层必须是 JSON 对象")
+
+    crop_errors = []
+    for work_id, entry in overrides.items():
+        if not isinstance(entry, dict):
+            crop_errors.append(f"{work_id}: 微调内容必须是对象")
+            continue
+
+        for key in ("x", "y", "zoom"):
+            if key not in entry:
+                crop_errors.append(f"{work_id}: 缺少 {key}")
+                continue
+            try:
+                value = float(entry[key])
+            except (TypeError, ValueError):
+                crop_errors.append(f"{work_id}: {key} 必须是数字")
+                continue
+
+            if key in ("x", "y") and not (0 <= value <= 100):
+                crop_errors.append(f"{work_id}: {key} 必须在 0-100 之间")
+            if key == "zoom" and not (100 <= value <= 155):
+                crop_errors.append(f"{work_id}: zoom 必须在 100-155 之间")
+
+    if crop_errors:
+        print("[ERROR] cover-overrides.json 存在问题：")
+        for item in crop_errors:
+            print("  -", item)
+        sys.exit(1)
+
+    print(f"[OK] 裁剪微调检查通过：{len(overrides)} 条记录。")
