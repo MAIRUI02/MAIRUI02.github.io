@@ -1,0 +1,45 @@
+.archive-nav { position:sticky; top:0; z-index:20; display:flex; align-items:flex-end; gap:7px; min-height:65px; padding:6px max(4vw,18px); border-bottom:3px solid var(--line); background:#f8f3e8ee; box-shadow:0 4px 0 #b9cbb4; backdrop-filter:blur(7px); font:12px/1 ui-monospace,monospace; }
+.archive-nav__brand { flex:0 0 auto; margin-right:auto; padding-right:14px; font:700 15px "Noto Serif SC",serif; text-decoration:none; white-space:nowrap; }
+.archive-nav__link,.archive-nav__button { position:relative; flex:0 0 auto; width:34px; height:46px; border:3px solid #334139; border-radius:18px 18px 3px 3px; background:linear-gradient(180deg,#dce9c8 0 53%,#a8c58e 54% 59%,#7ea97e 60%); padding:0; color:inherit; font:inherit; text-decoration:none; white-space:nowrap; cursor:pointer; overflow:visible; box-shadow:inset 3px 0 #f5f0d9,inset -3px 0 #80966d,2px 2px 0 #6b7861; transform-origin:50% 100%; }
+.archive-nav__link::before,.archive-nav__button::before { position:absolute; inset:5px 5px 0; border-radius:12px 12px 0 0; background:linear-gradient(180deg,#b9d9dc 0 45%,#f6dfbb 46% 57%,#a9c985 58% 100%); content:""; opacity:.78; }
+.archive-nav__link[data-nav-key="masterworks"],.archive-nav__button[data-nav-key="draw"] { background:linear-gradient(180deg,#eed6be 0 53%,#d2a676 54% 59%,#9e7658 60%); }
+.archive-nav__link[data-nav-key="masterworks"]::before,.archive-nav__button[data-nav-key="draw"]::before { background:linear-gradient(180deg,#dde1bd 0 43%,#f4ba88 44% 57%,#b68065 58%); }
+.archive-nav__link[data-nav-key="hp"] { background:linear-gradient(180deg,#a74c3b 0 53%,#743023 54% 59%,#4e221c 60%); }
+.archive-nav__link[data-nav-key="hp"]::before { background:linear-gradient(180deg,#8f3428 0 46%,#e0ba79 47% 56%,#5b281f 57% 100%); }
+.archive-nav__link[data-nav-key="hp"] .archive-nav__icon::before { top:3px; left:1px; display:grid; place-items:center; width:27px; height:27px; border:2px solid #f2dfac; border-radius:50%; background:#7d2632; color:#f6e5b7; content:"9¾"; font:700 11px/1 Georgia,serif; text-shadow:none; box-shadow:2px 2px 0 #4a1d17; }
+.archive-nav__link[data-nav-key="celebrity"] { background:linear-gradient(180deg,#e5cade 0 53%,#c69cb9 54% 59%,#916f91 60%); }
+.archive-nav__link[data-nav-key="celebrity"]::before { background:linear-gradient(180deg,#bad5d5 0 43%,#e9d2ab 44% 57%,#93b778 58%); }
+.archive-nav__icon { position:relative; z-index:1; display:grid; place-items:center; width:100%; height:100%; min-width:0; text-align:center; font:inherit; font-size:16px; line-height:1; filter:drop-shadow(1px 1px 0 #f7f0db); }
+/* 小窗角落的花盆，来自馆主提供的像素盆栽参考图。 */
+.archive-nav__icon::before,.archive-nav__icon::after { position:absolute; display:block; background-repeat:no-repeat; background-position:center; background-size:contain; content:""; image-rendering:pixelated; pointer-events:none; }
+.archive-nav__icon::before { width:25px; height:32px; top:-13px; left:-8px; background-image:url("assets/nav-potted-flowers.png"); background-size:150px auto; background-position:4% 48%; }
+.archive-nav__icon::after { display:none; }
+.archive-nav__link:nth-of-type(3n) .archive-nav__icon::before { background-position:27% 48%; }
+.archive-nav__link:nth-of-type(4n) .archive-nav__icon::before { background-position:51% 48%; }
+.archive-nav__link:nth-of-type(5n) .archive-nav__icon::before { background-position:74% 48%; }
+.archive-nav__link:nth-of-type(6n) .archive-nav__icon::before,.archive-nav__button .archive-nav__icon::before { background-position:97% 48%; }
+.archive-nav__label { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; }
+.archive-nav__link::after,.archive-nav__button::after { position:absolute; z-index:25; top:calc(100% + 9px); left:50%; transform:translateX(-50%) translateY(-2px); padding:7px 9px; border:2px solid var(--line); background:#fffaf0; box-shadow:3px 3px 0 #819474; color:var(--ink); content:attr(data-tooltip); font-size:12px; line-height:1; opacity:0; pointer-events:none; transition:opacity .12s ease,transform .12s ease; }
+.archive-nav__link:hover::after,.archive-nav__button:hover::after,.archive-nav__link:focus-visible::after,.archive-nav__button:focus-visible::after { opacity:1; transform:translateX(-50%) translateY(0); }
+.archive-nav__link:hover,.archive-nav__button:hover,.archive-nav__link:focus-visible,.archive-nav__button:focus-visible { border-color:#1d2922; outline:none; box-shadow:inset 3px 0 #fff8de,inset -3px 0 #687a5f,3px 3px 0 #53624e; animation:archive-window-wiggle .36s steps(2,end); }
+.hero > nav { display:none; }
+.archive-page--profile > :not(#profile),.archive-page--masterworks > :not(#masterworks),.archive-page--works > :not(#works),.archive-page--random > :not(#draw) { display:none; }
+.archive-page--random > #draw { display:block; max-width:760px; margin:60px auto; }
+body[data-archive-view] > .hero { display:none; }
+@keyframes archive-window-wiggle { 0%,100% { transform:rotate(0) translateY(0) } 25% { transform:rotate(-2deg) translateY(-2px) } 50% { transform:rotate(2deg) translateY(-3px) } 75% { transform:rotate(-1deg) translateY(-1px) } }
+@media(prefers-reduced-motion:reduce){.archive-nav__link:hover,.archive-nav__button:hover,.archive-nav__link:focus-visible,.archive-nav__button:focus-visible{animation:none}}
+@media(max-width:860px){.archive-nav{min-height:61px;overflow-x:auto;scrollbar-width:thin;padding:5px 12px}.archive-nav__brand{font-size:14px;position:sticky;left:0;background:#f8f3e8;padding:8px 10px 8px 0}.archive-nav__link,.archive-nav__button{width:31px;height:42px}}
+.grid{grid-template-columns:repeat(3,1fr)}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}}
+
+/* 轻量花朵导航：保留像素花盆与悬停提示，取消窗格外框。 */
+.archive-nav { align-items:center; min-height:56px; gap:12px; }
+.archive-nav__link,.archive-nav__button { width:28px; height:34px; border:0; border-radius:0; background:transparent !important; box-shadow:none; overflow:visible; }
+.archive-nav__link::before,.archive-nav__button::before { display:none; }
+.archive-nav__icon { color:transparent; filter:none; }
+.archive-nav__icon::before { top:0; left:1px; width:27px; height:34px; }
+.archive-nav__link:hover,.archive-nav__button:hover,.archive-nav__link:focus-visible,.archive-nav__button:focus-visible { border:0; box-shadow:none; animation:archive-flower-glow .6s ease-in-out infinite alternate; }
+@keyframes archive-flower-glow { from { filter:brightness(1) } to { filter:brightness(1.16) saturate(1.12) } }
+.archive-nav__link[data-nav-key="celebrity"] .archive-nav__icon::before { top:1px; left:1px; width:28px; height:31px; background-image:url("assets/nav-celebrity-transparent.png"); background-size:contain; background-position:center; mix-blend-mode:multiply; }
+@media(max-width:860px){.archive-nav__link,.archive-nav__button{width:28px;height:34px}}
+
