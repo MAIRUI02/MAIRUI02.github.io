@@ -1,0 +1,8 @@
+{
+  "name": "閲読器作品記録",
+  "description": "个人互动作品档案馆与阅读记录",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
