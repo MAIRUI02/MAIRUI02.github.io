@@ -76,14 +76,19 @@
         </div>
 
         <!-- 3. CENTER: Dark Slate Stitched Photo Postcard -->
-        <div class="scrapbook-photo-card">
-          <div class="scrapbook-photo-frame">
+        <div class="scrapbook-photo-card" id="scrapbookPhotoCard">
+          <div class="scrapbook-photo-frame" id="scrapbookPhotoTrigger" title="点击或拖入图片更换原图">
             <div class="scrapbook-photo-window">
               <!-- Romantic Tied Hands Ribbon Photo -->
-              <img class="scrapbook-photo-img" src="assets/tied-hands-ribbon.jpg" alt="The Art of Loving - 丝带与双手">
+              <img id="heroPhotoImg" class="scrapbook-photo-img" src="assets/tied-hands-ribbon.jpg" alt="The Art of Loving - 丝带与双手">
+              <div class="scrapbook-photo-upload-hint">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                <span>点击或拖拽放入图1</span>
+              </div>
             </div>
           </div>
-          <div class="scrapbook-card-imprint">閲読器作品記録</div>
+          <input type="file" id="heroPhotoFileInput" accept="image/*" style="display:none;" aria-label="上传主画报图片">
+          <div class="scrapbook-card-imprint">DESIGN BY @GINE.ARTE · 閲読器作品記録</div>
         </div>
 
         <!-- 4. BOTTOM-LEFT: Vintage Perforated Postage Stamp ("Love is like...") -->
@@ -878,6 +883,62 @@
         }
       });
     });
+
+    // Custom Hero Photo Selector & Drag-Drop Uploader
+    const photoTrigger = document.getElementById('scrapbookPhotoTrigger');
+    const photoInput = document.getElementById('heroPhotoFileInput');
+    const heroImg = document.getElementById('heroPhotoImg');
+
+    // Load saved image from localStorage if available
+    const savedCustomPhoto = localStorage.getItem('celebrity_hero_photo_custom');
+    if (savedCustomPhoto && heroImg) {
+      heroImg.src = savedCustomPhoto;
+    }
+
+    function handleImageFile(file) {
+      if (!file || !file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const dataUrl = e.target.result;
+        if (heroImg) heroImg.src = dataUrl;
+        try {
+          localStorage.setItem('celebrity_hero_photo_custom', dataUrl);
+        } catch (err) {
+          console.warn('LocalStorage limit reached for custom image', err);
+        }
+        // Also persist to server disk assets/tied-hands-ribbon.jpg
+        fetch('/api/upload-hero-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ image: dataUrl })
+        }).catch(err => console.warn('Hero image server save optional:', err));
+      };
+      reader.readAsDataURL(file);
+    }
+
+    if (photoTrigger && photoInput) {
+      photoTrigger.addEventListener('click', () => photoInput.click());
+      photoInput.addEventListener('change', (e) => {
+        if (e.target.files && e.target.files[0]) {
+          handleImageFile(e.target.files[0]);
+        }
+      });
+
+      photoTrigger.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        photoTrigger.classList.add('is-dragover');
+      });
+      photoTrigger.addEventListener('dragleave', () => {
+        photoTrigger.classList.remove('is-dragover');
+      });
+      photoTrigger.addEventListener('drop', (e) => {
+        e.preventDefault();
+        photoTrigger.classList.remove('is-dragover');
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          handleImageFile(e.dataTransfer.files[0]);
+        }
+      });
+    }
   </script>
   <script src="cover-mapping.js?v=repo-20260906"></script>
 </body>

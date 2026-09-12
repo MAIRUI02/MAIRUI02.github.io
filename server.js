@@ -1,4 +1,5 @@
 import express from 'express';
+import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
@@ -8,7 +9,7 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = 3000;
 
-app.use(express.json());
+app.use(express.json({ limit: '25mb' }));
 
 // In-memory status store for edge-functions/api/status fallback
 let statusStore = { currentWork: '《待补充作品名》', updatedAt: null };
@@ -24,6 +25,24 @@ app.post('/api/status', (req, res) => {
   }
   statusStore = { currentWork, updatedAt: new Date().toISOString() };
   res.json(statusStore);
+});
+
+// Endpoint to directly save custom hero photo to assets/tied-hands-ribbon.jpg
+app.post('/api/upload-hero-image', (req, res) => {
+  try {
+    const dataUrl = req.body?.image;
+    if (!dataUrl || typeof dataUrl !== 'string') {
+      return res.status(400).json({ error: 'Missing image data' });
+    }
+    const matches = dataUrl.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    const buffer = matches ? Buffer.from(matches[2], 'base64') : Buffer.from(dataUrl, 'base64');
+    const targetPath = path.join(__dirname, 'assets', 'tied-hands-ribbon.jpg');
+    fs.writeFileSync(targetPath, buffer);
+    return res.json({ success: true, path: '/assets/tied-hands-ribbon.jpg?t=' + Date.now() });
+  } catch (err) {
+    console.error('Failed to save hero image:', err);
+    return res.status(500).json({ error: err.message });
+  }
 });
 
 // Convenience route for works directory
