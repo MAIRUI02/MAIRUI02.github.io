@@ -10,6 +10,43 @@
   <link rel="stylesheet" href="retro.css">
   <link rel="stylesheet" href="archive-nav.css">
   <link rel="stylesheet" href="celebrity-salon.css">
+  <style>
+    /* 直接在页面内清理并定制上半部分布局，移除所有多余导语和小字 */
+    .celebrity-salon__intro,
+    .scrapbook-canvas__watermark,
+    .scrapbook-ticket,
+    .scrapbook-heart,
+    .scrapbook-stamp,
+    .scrapbook-lace-cartouche {
+      display: none !important;
+    }
+    .scrapbook-canvas {
+      position: relative;
+      min-height: 480px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 60px;
+    }
+    .clean-hero-left {
+      z-index: 2;
+      max-width: 500px;
+    }
+    .clean-hero-right {
+      z-index: 2;
+      width: 420px;
+    }
+    .clean-hero-right .scrapbook-photo-frame {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      cursor: pointer;
+    }
+    .clean-hero-right .scrapbook-photo-window {
+      background: transparent !important;
+      border: none !important;
+    }
+  </style>
 </head>
 <body data-archive-view="celebrity">
   <nav class="archive-nav" aria-label="网站导航">
@@ -24,28 +61,66 @@
   </nav>
 
   <main class="celebrity-salon">
-    <!-- Header Introduction (已去除多余小字和导语) -->
-    <header class="celebrity-salon__intro">
-      <div class="celebrity-kicker-badge">REAL-PERSON FICTION ARCHIVE · 真人区专栏</div>
-      <h1>真人区专栏</h1>
-    </header>
+    <!-- 顶层主视觉区域：左侧图1布局（大标题+4只小兔子），右侧图2（纯净双人手部特写） -->
+    <section class="celebrity-scrapbook-stage" aria-label="真人区拼贴画报">
+      <div class="scrapbook-canvas">
+        <div class="washi-tape washi-tape--top-center" aria-hidden="true"></div>
 
-    <!-- 极简主视觉舞台：只展示图2风格的图片，并完美契合你的上传/拖拽换图逻辑 -->
-    <section class="celebrity-scrapbook-stage" aria-label="真人区主视觉">
-      <div class="scrapbook-canvas" style="min-height: auto; padding: 20px 0; display: flex; justify-content: center; align-items: center;">
-        <div class="scrapbook-photo-card" id="scrapbookPhotoCard" style="margin: 0 auto; max-width: 440px; width: 100%;">
-          <div class="scrapbook-photo-frame" id="scrapbookPhotoTrigger" title="点击或拖入图片更换原图" style="cursor: pointer;">
-            <div class="scrapbook-photo-window" style="position: relative;">
-              <!-- 请确保你的图2图片存放在对应路径，例如 assets/hand-art.png -->
-              <img id="heroPhotoImg" class="scrapbook-photo-img" src="assets/hand-art.png" alt="The Art of Loving - 双人手部特写">
-              <div class="scrapbook-photo-upload-hint">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                <span>点击或拖拽更换图片</span>
-              </div>
+        <!-- 左侧：图1风格的标题与分类小兔子（已去除导语小字） -->
+        <div class="clean-hero-left">
+          <div class="site-title-group" style="margin-bottom: 35px;">
+            <div style="font-size: 11px; letter-spacing: 2px; color: #8a5369; margin-bottom: 4px;">REAL-PERSON FICTION ARCHIVE</div>
+            <h1 style="font-family: 'Parisienne', cursive; font-size: 68px; color: #8a5369; margin: 0; line-height: 1;">Paletas</h1>
+            <h2 style="font-size: 26px; color: #5a404a; font-weight: 600; margin: 6px 0 10px 0;">真人区专栏</h2>
+            <div style="font-size: 13px; color: #9c6c7c; letter-spacing: 3px;">—— 同样的人，不同的色彩。 ——</div>
+          </div>
+
+          <!-- 四个分类兔子图标及文案 -->
+          <div style="display: flex; gap: 20px;">
+            <div style="text-align: center;">
+              <div style="font-size: 22px; color: #d97792;">🐇</div>
+              <div style="font-size: 10px; color: #8a5369;">01</div>
+              <div style="font-size: 11px; font-weight: bold; color: #5a404a;">GIRL_GROUP</div>
+              <div style="font-size: 10px; color: #9c6c7c;">女子组合</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 22px; color: #d97792;">🐇</div>
+              <div style="font-size: 10px; color: #8a5369;">02</div>
+              <div style="font-size: 11px; font-weight: bold; color: #d97792;">ACTOR</div>
+              <div style="font-size: 10px; color: #9c6c7c;">演员</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 22px; color: #22px; color: #d97792;">🐇</div>
+              <div style="font-size: 10px; color: #8a5369;">03</div>
+              <div style="font-size: 11px; font-weight: bold; color: #5a404a;">VARIETY</div>
+              <div style="font-size: 10px; color: #9c6c7c;">综艺</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 22px; color: #d97792;">🐇</div>
+              <div style="font-size: 10px; color: #8a5369;">04</div>
+              <div style="font-size: 11px; font-weight: bold; color: #5a404a;">OTHER</div>
+              <div style="font-size: 10px; color: #9c6c7c;">其他</div>
             </div>
           </div>
-          <input type="file" id="heroPhotoFileInput" accept="image/*" style="display:none;" aria-label="上传主画报图片">
         </div>
+
+        <!-- 右侧：更换为图2（像素网点、十字星、花边缎带双人手图） -->
+        <div class="clean-hero-right">
+          <div class="scrapbook-photo-card" id="scrapbookPhotoCard" style="margin: 0;">
+            <div class="scrapbook-photo-frame" id="scrapbookPhotoTrigger" title="点击或拖入图片更换原图">
+              <div class="scrapbook-photo-window" style="position: relative;">
+                <!-- 请确保图2图片存放在正确路径，例如 assets/hand-art.png -->
+                <img id="heroPhotoImg" class="scrapbook-photo-img" src="assets/hand-art.png" alt="The Art of Loving - 双人手部特写" style="width: 100%; height: auto; display: block; border-radius: 4px;">
+                <div class="scrapbook-photo-upload-hint">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                  <span>点击或拖拽更换图片</span>
+                </div>
+              </div>
+            </div>
+            <input type="file" id="heroPhotoFileInput" accept="image/*" style="display:none;" aria-label="上传主画报图片">
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -772,7 +847,6 @@
     const photoInput = document.getElementById('heroPhotoFileInput');
     const heroImg = document.getElementById('heroPhotoImg');
 
-    // Load saved image from localStorage if available
     const savedCustomPhoto = localStorage.getItem('celebrity_hero_photo_custom');
     if (savedCustomPhoto && heroImg) {
       heroImg.src = savedCustomPhoto;
@@ -789,7 +863,6 @@
         } catch (err) {
           console.warn('LocalStorage limit reached for custom image', err);
         }
-        // Also persist to server disk assets/tied-hands-ribbon.jpg
         fetch('/api/upload-hero-image', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
