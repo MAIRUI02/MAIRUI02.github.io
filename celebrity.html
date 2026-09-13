@@ -6,7 +6,7 @@
   <title>真人区专栏 · The Art of Loving · 閲読器作品記録</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,600&family=Parisienne&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Great+Vibes&family=MonteCarlo&family=Noto+Serif+SC:wght@500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,600&family=Parisienne&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="retro.css">
   <link rel="stylesheet" href="archive-nav.css">
@@ -25,149 +25,377 @@
   </nav>
 
   <main class="celebrity-salon">
-    <!-- Header Introduction -->
-    <header class="celebrity-salon__intro">
-      <div class="celebrity-kicker-badge">REAL-PERSON FICTION ARCHIVE · 真人区专栏</div>
-      <h1>真人区专栏</h1>
-      <p class="subtitle">收录真人向、偶像与同人互动作品 · 按所属团体进入各个专属资料室</p>
-    </header>
-
-    <!-- The Art of Loving Scrapbook Collage Board -->
-    <section class="celebrity-scrapbook-stage" aria-label="真人区拼贴画报">
-      <div class="scrapbook-canvas">
-        <div class="washi-tape washi-tape--top-center" aria-hidden="true"></div>
-        
-        <!-- Faint Background Love Letter Script Watermark -->
-        <div class="scrapbook-canvas__watermark" aria-hidden="true">
-          The art of loving is the art of writing memories onto the fragile pages of time...
-          Every record whispers a melody, each scene an everlasting portrait of youth.
-          Keep these moments safe inside your heart forever.
-          Easy to love, lovely to remember.
+    <!-- ==========================================================================
+         TOP HERO STAGE: Image 1 UI ("Paletas" Layout)
+         - Outer border: Soft blush vintage framed stage with corner lace & ribbons
+         - Top bar: Nav tabs (HOME/ARTIST/ARCHIVE/ABOUT), search, heart, menu
+         - Left: "Paletas" cursive title + "真人区专栏", 4 bunny category buttons
+         - Right: Notebook photocard tied with 3D red criss-cross strings
+         - Inside photocard photo area: Image 2 (two hands tied with ribbon pixel art)
+         - All guide & small text removed as requested
+         ========================================================================== -->
+    <header class="paletas-hero-stage" id="paletasHeroStage" aria-label="真人区专栏">
+      <div class="paletas-stage-card">
+        <!-- Corner Ornate Lace SVG Flourishes -->
+        <div class="paletas-lace-corner paletas-lace-tl" aria-hidden="true">
+          <svg viewBox="0 0 100 100" class="paletas-lace-svg">
+            <path d="M4,4 L96,4 M4,4 L4,96" stroke="#cca5b4" stroke-width="1.5" fill="none"/>
+            <path d="M14,14 C14,42 42,14 74,14 C32,24 24,32 14,74 Z" fill="#e8c3d0" opacity="0.35"/>
+            <path d="M8,8 C28,14 14,28 8,48 C14,32 32,14 48,8 Z" fill="#cca5b4" opacity="0.4"/>
+            <circle cx="10" cy="10" r="3" fill="#cca5b4"/>
+            <circle cx="48" cy="8" r="2" fill="#cca5b4"/>
+            <circle cx="8" cy="48" r="2" fill="#cca5b4"/>
+            <path d="M4,4 Q50,20 20,50 Z" stroke="#cca5b4" stroke-width="0.8" fill="none"/>
+          </svg>
         </div>
-
-        <!-- 1. TOP-LEFT: Layered 3D Concentric Pink Paper Heart -->
-        <div class="scrapbook-heart" title="Concentric Cutout Paper Heart" aria-hidden="true">
-          <svg class="scrapbook-heart-svg" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <filter id="heartShadow" x="-20%" y="-20%" width="150%" height="150%">
-                <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#8a5369" flood-opacity="0.28"/>
-              </filter>
-            </defs>
-            <!-- Layer 1 (Outer Blush Pink Heart) -->
-            <path d="M80 144 C20 104 4 74 4 46 C4 22 22 6 48 6 C64 6 74 14 80 24 C86 14 96 6 112 6 C138 6 156 22 156 46 C156 74 140 104 80 144 Z" fill="#f8cedb" stroke="#f1b5c7" stroke-width="1.5" filter="url(#heartShadow)"/>
-            <!-- Layer 2 (First Inner Ring) -->
-            <path d="M80 130 C28 94 14 68 14 46 C14 28 28 16 48 16 C62 16 72 24 80 34 C88 24 98 16 112 16 C132 16 146 28 146 46 C146 68 132 94 80 130 Z" fill="#f3b8cb" stroke="#ea9eb5" stroke-width="1.5"/>
-            <!-- Layer 3 (Second Inner Ring) -->
-            <path d="M80 116 C36 84 24 62 24 46 C24 34 34 26 48 26 C59 26 69 33 80 43 C91 33 101 26 112 26 C126 26 136 34 136 46 C136 62 124 84 80 116 Z" fill="#ec9fb5" stroke="#df869f" stroke-width="1.5"/>
-            <!-- Layer 4 (Third Inner Ring) -->
-            <path d="M80 102 C44 74 34 56 34 46 C34 40 40 35 48 35 C57 35 66 41 80 52 C94 41 103 35 112 35 C120 35 126 40 126 46 C126 56 116 74 80 102 Z" fill="#e28aa2" stroke="#d4738d" stroke-width="1.5"/>
-            <!-- Layer 5 (Center Heart Core) -->
-            <path d="M80 88 C52 66 44 52 44 46 C44 43 46 41 48 41 C54 41 63 47 80 60 C97 47 106 41 112 41 C114 41 116 43 116 46 C116 52 108 66 80 88 Z" fill="#d97792"/>
+        <div class="paletas-lace-corner paletas-lace-tr" aria-hidden="true">
+          <svg viewBox="0 0 100 100" class="paletas-lace-svg">
+            <path d="M4,4 L96,4 M96,4 L96,96" stroke="#cca5b4" stroke-width="1.5" fill="none"/>
+            <path d="M86,14 C86,42 58,14 26,14 C68,24 76,32 86,74 Z" fill="#e8c3d0" opacity="0.35"/>
+            <path d="M92,8 C72,14 86,28 92,48 C86,32 68,14 52,8 Z" fill="#cca5b4" opacity="0.4"/>
+            <circle cx="90" cy="10" r="3" fill="#cca5b4"/>
+            <circle cx="52" cy="8" r="2" fill="#cca5b4"/>
+            <circle cx="92" cy="48" r="2" fill="#cca5b4"/>
+            <path d="M96,4 Q50,20 80,50 Z" stroke="#cca5b4" stroke-width="0.8" fill="none"/>
+          </svg>
+        </div>
+        <div class="paletas-lace-corner paletas-lace-bl" aria-hidden="true">
+          <svg viewBox="0 0 100 100" class="paletas-lace-svg">
+            <path d="M4,96 L96,96 M4,4 L4,96" stroke="#cca5b4" stroke-width="1.5" fill="none"/>
+            <path d="M14,86 C14,58 42,86 74,86 C32,76 24,68 14,26 Z" fill="#e8c3d0" opacity="0.35"/>
+            <path d="M8,92 C28,86 14,72 8,52 C14,68 32,86 48,92 Z" fill="#cca5b4" opacity="0.4"/>
+            <circle cx="10" cy="90" r="3" fill="#cca5b4"/>
+            <circle cx="48" cy="92" r="2" fill="#cca5b4"/>
+            <circle cx="8" cy="52" r="2" fill="#cca5b4"/>
+            <path d="M4,96 Q50,80 20,50 Z" stroke="#cca5b4" stroke-width="0.8" fill="none"/>
+          </svg>
+        </div>
+        <div class="paletas-lace-corner paletas-lace-br" aria-hidden="true">
+          <svg viewBox="0 0 100 100" class="paletas-lace-svg">
+            <path d="M4,96 L96,96 M96,4 L96,96" stroke="#cca5b4" stroke-width="1.5" fill="none"/>
+            <path d="M86,86 C86,58 58,86 26,86 C68,76 76,68 86,26 Z" fill="#e8c3d0" opacity="0.35"/>
+            <path d="M92,92 C72,86 86,72 92,52 C86,68 68,86 52,92 Z" fill="#cca5b4" opacity="0.4"/>
+            <circle cx="90" cy="90" r="3" fill="#cca5b4"/>
+            <circle cx="52" cy="92" r="2" fill="#cca5b4"/>
+            <circle cx="92" cy="52" r="2" fill="#cca5b4"/>
+            <path d="M96,96 Q50,80 80,50 Z" stroke="#cca5b4" stroke-width="0.8" fill="none"/>
           </svg>
         </div>
 
-        <!-- 2. TOP-RIGHT: Vintage Scalloped Ticket Stub ("Easy To Love") -->
-        <div class="scrapbook-ticket" title="Easy To Love Ticket">
-          <div class="scrapbook-ticket__inner">
-            <span class="scrapbook-ticket__flourish" aria-hidden="true">∿</span>
-            <span class="scrapbook-ticket__text">Easy To Love</span>
-            <span class="scrapbook-ticket__flourish" aria-hidden="true">∿</span>
+        <!-- Top & Bottom Decorative Ribbon Bows along the border -->
+        <div class="paletas-border-bow paletas-border-bow--top" aria-hidden="true">
+          <svg viewBox="0 0 60 30" width="50" height="25">
+            <path d="M30,15 C22,5 10,6 12,18 C14,24 24,20 30,16 C36,20 46,24 48,18 C50,6 38,5 30,15 Z" fill="#d88aa5"/>
+            <circle cx="30" cy="15" r="3.5" fill="#ba6180"/>
+            <path d="M28,17 Q24,28 18,30 M32,17 Q36,28 42,30" stroke="#ba6180" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+
+        <!-- Inner Top Navigation Bar (from Image 1) -->
+        <div class="paletas-top-nav">
+          <div class="paletas-top-nav__brand">
+            <svg viewBox="0 0 40 24" width="26" height="16" class="paletas-nav-bow" aria-hidden="true">
+              <path d="M20,12 C14,4 6,5 8,14 C10,19 16,16 20,13 C24,16 30,19 32,14 C34,5 26,4 20,12 Z" fill="#d47998"/>
+              <circle cx="20" cy="12" r="2.5" fill="#b85678"/>
+              <path d="M18,13 Q14,21 10,23 M22,13 Q26,21 30,23" stroke="#b85678" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+            </svg>
+            <div class="paletas-top-nav__brand-text">
+              <span class="paletas-top-nav__en">REAL-PERSON FICTION ARCHIVE</span>
+              <span class="paletas-top-nav__zh">真人区专栏</span>
+            </div>
+          </div>
+
+          <div class="paletas-top-nav__actions">
+            <div class="paletas-search-pill">
+              <input type="text" id="paletasSearchInput" placeholder="Search..." aria-label="搜索真人区作品">
+              <button type="button" id="paletasSearchBtn" class="paletas-search-btn" aria-label="执行搜索">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <circle cx="11" cy="11" r="7"/>
+                  <line x1="16.5" y1="16.5" x2="21" y2="21"/>
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- 3. CENTER: Dark Slate Stitched Photo Postcard -->
-        <div class="scrapbook-photo-card" id="scrapbookPhotoCard">
-          <div class="scrapbook-photo-frame" id="scrapbookPhotoTrigger" title="点击或拖入图片更换原图">
-            <div class="scrapbook-photo-window">
-              <!-- Romantic Tied Hands Ribbon Photo -->
-              <img id="heroPhotoImg" class="scrapbook-photo-img" src="assets/tied-hands-ribbon.jpg" alt="The Art of Loving - 丝带与双手">
-              <div class="scrapbook-photo-upload-hint">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
-                <span>点击或拖拽放入图1</span>
+        <!-- Main Body: Left Column (Title + 4 Bunny Buttons), Right Column (Notebook with Image 2) -->
+        <div class="paletas-stage-grid">
+          <!-- Left Column: Title + 4 Bunnies (Guide text and small text removed) -->
+          <div class="paletas-col-left">
+            <div class="paletas-hero-title-wrap">
+              <div class="paletas-script-title">
+                Paletas
+                <span class="paletas-title-bow" aria-hidden="true">
+                  <svg viewBox="0 0 48 36" width="38" height="28">
+                    <path d="M24,16 C16,4 4,6 8,19 C12,25 20,21 24,17 C28,21 36,25 40,19 C44,6 32,4 24,16 Z" fill="#e086a2"/>
+                    <circle cx="24" cy="16" r="3.5" fill="#be5d7b"/>
+                    <path d="M22,18 Q16,30 10,34 M26,18 Q32,30 38,34" stroke="#be5d7b" stroke-width="2" fill="none" stroke-linecap="round"/>
+                  </svg>
+                </span>
+              </div>
+              <h1 class="paletas-chinese-title">真人区专栏</h1>
+            </div>
+
+            <!-- 4 Bunny Interactive Feature Buttons (Scrapbook Gamification & Filter) -->
+            <div class="paletas-bunny-row" role="group" aria-label="手账趣味互动与精选筛选">
+              <!-- Bunny 1: 摇签抽卡 LUCKY DRAW -->
+              <button class="paletas-bunny-card" type="button" data-bunny-action="lucky-draw" id="bunnyTab01" title="剧荒摇签：随机抽取今日命定佳作">
+                <div class="paletas-bunny-figure">
+                  <!-- Bunny with Star Fortune Wand & Ticket -->
+                  <svg viewBox="0 0 80 80" class="paletas-bunny-svg">
+                    <ellipse cx="40" cy="54" rx="22" ry="19" fill="currentColor"/>
+                    <circle cx="52" cy="38" r="15" fill="currentColor"/>
+                    <ellipse cx="46" cy="18" rx="5.5" ry="14" fill="currentColor" transform="rotate(-12 46 18)"/>
+                    <ellipse cx="58" cy="19" rx="5" ry="13" fill="currentColor" transform="rotate(10 58 19)"/>
+                    <circle cx="18" cy="56" r="6" fill="currentColor"/>
+                    <!-- Sparkle fortune wand & ticket -->
+                    <line x1="48" y1="44" x2="68" y2="28" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+                    <polygon points="68,23 71,28 76,28 72,31 74,36 68,33 63,36 65,31 61,28 66,28" fill="#ffe082"/>
+                    <circle cx="56" cy="37" r="1.5" fill="#582a3a"/>
+                    <ellipse cx="58" cy="42" rx="3" ry="1.5" fill="#f48fb1" opacity="0.9"/>
+                  </svg>
+                </div>
+                <div class="paletas-bunny-info">
+                  <span class="paletas-bunny-num">01</span>
+                  <span class="paletas-bunny-en">LUCKY_DRAW</span>
+                  <span class="paletas-bunny-zh">摇签抽卡</span>
+                </div>
+              </button>
+
+              <!-- Bunny 2: 镇圈高分 TOP RATED -->
+              <button class="paletas-bunny-card" type="button" data-bunny-action="top-rated" id="bunnyTab02" title="高分精选：高亮筛选全站镇圈神作">
+                <div class="paletas-bunny-figure">
+                  <!-- Crowned Bunny with Masterpiece Star -->
+                  <svg viewBox="0 0 80 80" class="paletas-bunny-svg">
+                    <ellipse cx="40" cy="54" rx="22" ry="20" fill="currentColor"/>
+                    <circle cx="40" cy="34" r="15" fill="currentColor"/>
+                    <ellipse cx="33" cy="16" rx="5.5" ry="15" fill="currentColor" transform="rotate(-8 33 16)"/>
+                    <ellipse cx="47" cy="16" rx="5.5" ry="15" fill="currentColor" transform="rotate(8 47 16)"/>
+                    <!-- Little Crown -->
+                    <polygon points="32,22 34,16 40,19 46,16 48,22" fill="#ffd54f" stroke="#ffa000" stroke-width="0.8"/>
+                    <circle cx="34" cy="16" r="1" fill="#e91e63"/>
+                    <circle cx="40" cy="19" r="1" fill="#e91e63"/>
+                    <circle cx="46" cy="16" r="1" fill="#e91e63"/>
+                    <!-- Star on chest -->
+                    <polygon points="40,46 42,50 46,50 43,53 44,57 40,54 36,57 37,53 34,50 38,50" fill="#ffffff" opacity="0.95"/>
+                    <circle cx="36" cy="33" r="1.3" fill="#582a3a"/>
+                    <circle cx="44" cy="33" r="1.3" fill="#582a3a"/>
+                    <ellipse cx="33" cy="38" rx="2.5" ry="1.2" fill="#f48fb1" opacity="0.9"/>
+                    <ellipse cx="47" cy="38" rx="2.5" ry="1.2" fill="#f48fb1" opacity="0.9"/>
+                  </svg>
+                </div>
+                <div class="paletas-bunny-info">
+                  <span class="paletas-bunny-num">02</span>
+                  <span class="paletas-bunny-en">TOP_RATED</span>
+                  <span class="paletas-bunny-zh">镇圈高分</span>
+                </div>
+              </button>
+
+              <!-- Bunny 3: 最新收录 RECENT -->
+              <button class="paletas-bunny-card" type="button" data-bunny-action="recent" id="bunnyTab03" title="近期收录：按入库时间从新到旧排列">
+                <div class="paletas-bunny-figure">
+                  <!-- Bunny Reading Latest Book/Record -->
+                  <svg viewBox="0 0 80 80" class="paletas-bunny-svg">
+                    <ellipse cx="40" cy="56" rx="24" ry="18" fill="currentColor"/>
+                    <circle cx="40" cy="36" r="14" fill="currentColor"/>
+                    <ellipse cx="34" cy="18" rx="5" ry="14" fill="currentColor" transform="rotate(-15 34 18)"/>
+                    <ellipse cx="46" cy="18" rx="5" ry="14" fill="currentColor" transform="rotate(15 46 18)"/>
+                    <!-- Open book in paws -->
+                    <path d="M28,52 Q40,55 40,62 Q40,55 52,52 L52,60 Q40,63 40,70 Q40,63 28,60 Z" fill="#ffffff" opacity="0.95"/>
+                    <path d="M40,55 L40,70" stroke="#ca6a84" stroke-width="1.2"/>
+                    <circle cx="36" cy="35" r="1.3" fill="#582a3a"/>
+                    <circle cx="44" cy="35" r="1.3" fill="#582a3a"/>
+                    <ellipse cx="34" cy="39" rx="2.5" ry="1.2" fill="#f48fb1" opacity="0.9"/>
+                    <ellipse cx="46" cy="39" rx="2.5" ry="1.2" fill="#f48fb1" opacity="0.9"/>
+                  </svg>
+                </div>
+                <div class="paletas-bunny-info">
+                  <span class="paletas-bunny-num">03</span>
+                  <span class="paletas-bunny-en">RECENT</span>
+                  <span class="paletas-bunny-zh">最新收录</span>
+                </div>
+              </button>
+
+              <!-- Bunny 4: 贴纸变装 STAMPS -->
+              <button class="paletas-bunny-card" type="button" data-bunny-action="stamps" id="bunnyTab04" title="贴纸变装：盖上复古手账印章与切换插画氛围滤镜">
+                <div class="paletas-bunny-figure">
+                  <!-- Bunny with Stamp Wand & Bow -->
+                  <svg viewBox="0 0 80 80" class="paletas-bunny-svg">
+                    <ellipse cx="40" cy="58" rx="20" ry="18" fill="currentColor"/>
+                    <circle cx="40" cy="38" r="14" fill="currentColor"/>
+                    <ellipse cx="34" cy="15" rx="5" ry="16" fill="currentColor" transform="rotate(-10 34 15)"/>
+                    <ellipse cx="46" cy="15" rx="5" ry="16" fill="currentColor" transform="rotate(10 46 15)"/>
+                    <!-- Stamp tool in hand -->
+                    <rect x="52" y="44" width="10" height="7" rx="1.5" fill="#ffffff" opacity="0.95"/>
+                    <rect x="55" y="36" width="4" height="9" rx="1" fill="#ffffff" opacity="0.85"/>
+                    <polygon points="57,32 59,36 55,36" fill="#ffd54f"/>
+                    <!-- Bowtie on neck -->
+                    <path d="M37,47 C33,44 33,50 37,48 C41,50 41,44 37,47 Z" fill="#ffffff" opacity="0.9"/>
+                    <circle cx="37" cy="47" r="1.5" fill="#f06292"/>
+                  </svg>
+                </div>
+                <div class="paletas-bunny-info">
+                  <span class="paletas-bunny-num">04</span>
+                  <span class="paletas-bunny-en">STAMPS</span>
+                  <span class="paletas-bunny-zh">贴纸变装</span>
+                </div>
+              </button>
+            </div>
+
+            <!-- Mode Indicator Pill (Active when Top-Rated or Recent is selected) -->
+            <div class="paletas-mode-indicator" id="paletasModeIndicator" hidden>
+              <span class="paletas-mode-text" id="paletasModeText">★ 镇圈高分模式已开启</span>
+              <button type="button" class="paletas-mode-reset-btn" id="paletasModeResetBtn">✕ 还原全部</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Vintage Red-Thread Notebook Photocard with Image 2 -->
+          <div class="paletas-col-right">
+            <div class="paletas-notebook-stand">
+              <div class="paletas-notebook-card" id="celebrityBannerTrigger" title="点击或拖拽更换画报图片">
+                <!-- Two notebook eyelets on left spine -->
+                <div class="paletas-notebook-eyelet paletas-notebook-eyelet--top" aria-hidden="true"></div>
+                <div class="paletas-notebook-eyelet paletas-notebook-eyelet--bot" aria-hidden="true"></div>
+
+                <!-- Top Ribbon Bow on card header -->
+                <div class="paletas-notebook-head-bow" aria-hidden="true">
+                  <svg viewBox="0 0 40 20" width="32" height="16">
+                    <path d="M20,10 C14,2 6,4 8,12 C10,16 16,13 20,11 C24,13 30,16 32,12 C34,4 26,2 20,10 Z" fill="#df869f"/>
+                    <circle cx="20" cy="10" r="2" fill="#be5876"/>
+                  </svg>
+                </div>
+
+                <!-- Floating Toast Notification -->
+                <div class="paletas-card-toast" id="paletasCardToast" role="status" aria-live="polite"></div>
+
+                <!-- Photocard Picture Area: Displaying Image 2 (Halftone Pixel Art Tied Hands) -->
+                <div class="paletas-notebook-photo-window">
+                  <img 
+                    id="celebrityHeroBanner" 
+                    class="paletas-notebook-photo-img filter-rose" 
+                    src="assets/tied-hands-pixel.jpg" 
+                    alt="真人区专栏画报 - 丝带与双手"
+                  >
+                  <!-- Pixel Art Frame Overlay (matching Image 2) -->
+                  <div class="paletas-pixel-frame-overlay" aria-hidden="true">
+                    <svg viewBox="0 0 400 400" preserveAspectRatio="none" class="paletas-pixel-frame-svg">
+                      <!-- Pixel Corner Stars -->
+                      <g fill="#ca6a84">
+                        <polygon points="26,16 29,23 36,26 29,29 26,36 23,29 16,26 23,23"/>
+                        <polygon points="374,16 377,23 384,26 377,29 374,36 371,29 364,26 371,23"/>
+                        <polygon points="26,364 29,371 36,374 29,377 26,384 23,377 16,374 23,371"/>
+                        <polygon points="374,364 377,371 384,374 377,377 374,384 371,377 364,374 371,371"/>
+                        <polygon points="26,190 28,197 35,200 28,203 26,210 24,203 17,200 24,197"/>
+                        <polygon points="374,190 376,197 383,200 376,203 374,210 372,203 365,200 372,197"/>
+                        <polygon points="190,26 197,28 200,35 203,28 210,26 203,24 200,17 197,24"/>
+                        <polygon points="190,374 197,376 200,383 203,376 210,374 203,372 200,365 197,372"/>
+                      </g>
+                      <!-- Pixel Dotted Inner Frame Line -->
+                      <rect x="26" y="26" width="348" height="348" fill="none" stroke="#ca6a84" stroke-width="1.2" stroke-dasharray="3,3" opacity="0.6"/>
+                    </svg>
+                  </div>
+
+                  <!-- Interactive Handcrafted Stamp Overlay -->
+                  <div class="paletas-stamp-container" id="paletasStampContainer" aria-hidden="true">
+                    <div class="paletas-active-stamp" id="paletasActiveStamp">
+                      <!-- Default Stamp SVG: 樱花火漆印 -->
+                      <svg viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="44" fill="#c93b63" opacity="0.88"/>
+                        <circle cx="50" cy="50" r="39" fill="none" stroke="#fff0f5" stroke-width="1.8" stroke-dasharray="3,2"/>
+                        <circle cx="50" cy="50" r="34" fill="none" stroke="#fff0f5" stroke-width="1.2"/>
+                        <path d="M50,38 C46,32 38,34 40,42 C42,47 50,52 50,52 C50,52 58,47 60,42 C62,34 54,32 50,38 Z" fill="#ffffff" opacity="0.95"/>
+                        <text x="50" y="66" font-size="7.5" font-family="-apple-system, sans-serif" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="1">ARCHIVE 1997</text>
+                        <text x="50" y="74" font-size="6" font-family="-apple-system, sans-serif" font-weight="700" fill="#ffe4ec" text-anchor="middle" letter-spacing="0.5">HANDMADE WITH LOVE</text>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <!-- Fortune Card Slip (Lucky Draw Result) -->
+                  <div class="paletas-fortune-card" id="paletasFortuneCard" hidden>
+                    <button type="button" class="paletas-fortune-close" id="paletasFortuneClose" aria-label="关闭签条">✕</button>
+                    <div class="paletas-fortune-header">
+                      <span class="paletas-fortune-ribbon">✿ 今日幸运盲盒 ✿</span>
+                      <span class="paletas-fortune-sub">LUCKY DRAW SELECTION</span>
+                    </div>
+                    <div class="paletas-fortune-body">
+                      <div class="paletas-fortune-thumb">
+                        <img id="fortuneCoverImg" src="assets/covers/work-007.jpg" alt="推荐作品封面">
+                        <span class="paletas-fortune-stars" id="fortuneStars">★★★★★</span>
+                      </div>
+                      <div class="paletas-fortune-details">
+                        <p class="paletas-fortune-eyebrow" id="fortuneEyebrow">橙光 · 连载中</p>
+                        <h4 class="paletas-fortune-title" id="fortuneTitle">《作品名称》</h4>
+                        <p class="paletas-fortune-quote" id="fortuneQuote">「宿命的红线系紧在此刻，今夜宜翻阅。」</p>
+                      </div>
+                    </div>
+                    <div class="paletas-fortune-actions">
+                      <button type="button" class="paletas-fortune-btn paletas-fortune-btn--jump" id="fortuneJumpBtn">直达该篇 ↓</button>
+                      <button type="button" class="paletas-fortune-btn paletas-fortune-btn--redraw" id="fortuneRedrawBtn">再抽一次 ↺</button>
+                    </div>
+                  </div>
+
+                  <div class="paletas-photo-hover-hint">点击或拖入更换照片</div>
+                </div>
+                <input type="file" id="heroPhotoFileInput" accept="image/*" style="display:none;" aria-label="更换画报图片">
+
+                <!-- 3D Red Cord Layer across the notebook -->
+                <div class="paletas-red-cord-layer" aria-hidden="true">
+                  <svg viewBox="0 0 320 440" class="paletas-red-cord-svg" preserveAspectRatio="none">
+                    <defs>
+                      <filter id="cordShadow" x="-20%" y="-20%" width="140%" height="140%">
+                        <feDropShadow dx="1.5" dy="3" stdDeviation="2.5" flood-color="#551220" flood-opacity="0.35"/>
+                      </filter>
+                    </defs>
+                    <!-- Zig-zagging Red String across the card -->
+                    <g filter="url(#cordShadow)">
+                      <path d="M12,45 C70,55 240,105 308,125" stroke="#ce2943" stroke-width="3" stroke-linecap="round" fill="none"/>
+                      <path d="M308,125 C230,165 90,210 10,240" stroke="#c4233c" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+                      <path d="M10,240 C90,270 230,310 305,335" stroke="#ce2943" stroke-width="3" stroke-linecap="round" fill="none"/>
+                      <path d="M305,335 C230,360 80,390 12,398" stroke="#ba1e36" stroke-width="3" stroke-linecap="round" fill="none"/>
+                      <path d="M12,398 C90,410 210,415 285,410" stroke="#ce2943" stroke-width="3" stroke-linecap="round" fill="none"/>
+                      <circle cx="285" cy="410" r="4.5" fill="#9e1428"/>
+                      <path d="M285,410 C270,396 265,420 285,410 C295,395 315,405 285,410 Z" fill="#ba1e36"/>
+                      <path d="M285,410 Q290,430 300,438 M285,410 Q280,432 284,440" stroke="#9e1428" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    </g>
+                  </svg>
+                  <!-- Dangling Little Bunny Charm on the string -->
+                  <div class="paletas-charm-bunny" aria-hidden="true">
+                    <svg viewBox="0 0 32 32" width="22" height="22">
+                      <ellipse cx="16" cy="18" rx="8" ry="7" fill="#fae1eb" stroke="#b85675" stroke-width="1.2"/>
+                      <circle cx="16" cy="11" r="5" fill="#fae1eb" stroke="#b85675" stroke-width="1.2"/>
+                      <ellipse cx="13" cy="4" rx="2" ry="4" fill="#fae1eb" stroke="#b85675" stroke-width="1"/>
+                      <ellipse cx="19" cy="4" rx="2" ry="4" fill="#fae1eb" stroke="#b85675" stroke-width="1"/>
+                      <circle cx="14" cy="10" r="0.8" fill="#b85675"/>
+                      <circle cx="18" cy="10" r="0.8" fill="#b85675"/>
+                      <circle cx="16" cy="13" r="0.8" fill="#b85675"/>
+                    </svg>
+                  </div>
+                </div>
+
+                <!-- Notebook Footer Label -->
+                <div class="paletas-notebook-footer">
+                  <span class="paletas-notebook-doodle" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#6d4253" stroke-width="1.4">
+                      <circle cx="12" cy="14" r="7"/>
+                      <ellipse cx="9" cy="5" rx="2" ry="4"/>
+                      <ellipse cx="15" cy="5" rx="2" ry="4"/>
+                      <circle cx="10" cy="13" r="0.8" fill="#6d4253"/>
+                      <circle cx="14" cy="13" r="0.8" fill="#6d4253"/>
+                    </svg>
+                  </span>
+                  <span class="paletas-notebook-tag">ARCHIVE NO. 07</span>
+                  <span class="paletas-notebook-date">1997.09.12</span>
+                  <span class="paletas-notebook-heart" aria-hidden="true">♥</span>
+                </div>
               </div>
             </div>
           </div>
-          <input type="file" id="heroPhotoFileInput" accept="image/*" style="display:none;" aria-label="上传主画报图片">
-          <div class="scrapbook-card-imprint">DESIGN BY @GINE.ARTE · 閲読器作品記録</div>
         </div>
-
-        <!-- 4. BOTTOM-LEFT: Vintage Perforated Postage Stamp ("Love is like...") -->
-        <div class="scrapbook-stamp" title="Vintage Postage Stamp">
-          <div class="scrapbook-stamp__inner">
-            <div class="scrapbook-stamp__phrase">
-              <span class="scrapbook-stamp__love">Love</span>
-              <span class="scrapbook-stamp__islike">is like</span>
-            </div>
-            <!-- Vintage Frosted Cake with Cherry -->
-            <svg class="scrapbook-stamp__cake-svg" viewBox="0 0 54 44" width="46" height="36" fill="none" aria-hidden="true">
-              <path d="M8 36 C8 28 46 28 46 36 L46 40 L8 40 Z" fill="#99746e"/>
-              <path d="M6 38 L48 38 L48 42 L6 42 Z" fill="#75524c"/>
-              <path d="M8 29 C14 33 20 29 27 33 C34 29 40 33 46 29 C46 21 8 21 8 29 Z" fill="#ffffff"/>
-              <circle cx="27" cy="16" r="4.2" fill="#d93856"/>
-              <path d="M27 12 Q31 6 36 9" stroke="#526d40" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-            </svg>
-            <!-- Wavy Postal Ink Stamp -->
-            <svg class="scrapbook-stamp__cancellation" viewBox="0 0 60 30" fill="none" aria-hidden="true">
-              <path d="M0 8 Q15 0 30 8 T60 8" stroke="#4a303c" stroke-width="1.4"/>
-              <path d="M0 16 Q15 8 30 16 T60 16" stroke="#4a303c" stroke-width="1.4"/>
-              <path d="M0 24 Q15 16 30 24 T60 24" stroke="#4a303c" stroke-width="1.4"/>
-            </svg>
-          </div>
-        </div>
-
-        <!-- 5. BOTTOM-RIGHT: Antique Floral Embroidered Lace Cartouche -->
-        <div class="scrapbook-lace-cartouche" title="The Art of Loving">
-          <svg class="scrapbook-lace-svg" viewBox="0 0 360 230" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <filter id="laceDropShadow" x="-10%" y="-10%" width="125%" height="125%">
-                <feDropShadow dx="2" dy="8" stdDeviation="6" flood-color="#703f52" flood-opacity="0.25"/>
-              </filter>
-            </defs>
-            <g filter="url(#laceDropShadow)">
-              <!-- Outer Scalloped Floral Lace Embroidery Frame -->
-              <path d="M180 12 C270 12 342 54 342 115 C342 176 270 218 180 218 C90 218 18 176 18 115 C18 54 90 12 180 12 Z" fill="#fdfbf9" stroke="#e8d3dc" stroke-width="2"/>
-              
-              <!-- Lace Scalloped Flower Petals & Picots Pattern -->
-              <path d="
-                M 35 115 Q 26 98 38 88 Q 46 72 65 60 Q 86 46 118 30 Q 150 18 180 18 Q 210 18 242 30 Q 274 46 295 60 Q 314 72 322 88 Q 334 98 325 115
-                Q 334 132 322 142 Q 314 158 295 170 Q 274 184 242 200 Q 210 212 180 212 Q 150 212 118 200 Q 86 184 65 170 Q 46 158 38 142 Q 26 132 35 115 Z
-              " fill="none" stroke="#d8b2c2" stroke-width="2" stroke-dasharray="3,3"/>
-              
-              <!-- Lace Eyelet Circles Ring -->
-              <circle cx="50" cy="115" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="68" cy="80" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="100" cy="52" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="140" cy="34" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="180" cy="28" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="220" cy="34" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="260" cy="52" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="292" cy="80" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="310" cy="115" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="292" cy="150" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="260" cy="178" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="220" cy="196" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="180" cy="202" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="140" cy="196" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="100" cy="178" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-              <circle cx="68" cy="150" r="3.5" fill="#f4e6ec" stroke="#d5b0be" stroke-width="1"/>
-
-              <!-- Inner Blush Silk Oval Plaque -->
-              <ellipse cx="180" cy="115" rx="126" ry="76" fill="#fbf0f4" stroke="#e8bfcf" stroke-width="1.5"/>
-              <ellipse cx="180" cy="115" rx="120" ry="70" fill="none" stroke="#f0d1dc" stroke-width="1.2" stroke-dasharray="2,2"/>
-            </g>
-          </svg>
-          
-          <div class="scrapbook-lace-content">
-            <span class="scrapbook-lace-title">The Art of Loving</span>
-            <span class="scrapbook-lace-badge">真人专栏 · ARCHIVE SALON</span>
-          </div>
-        </div>
-
       </div>
-    </section>
+    </header>
 
     <!-- Category Menu: Vintage Scrapbook Label Sheet -->
-    <section class="celebrity-menu" aria-label="真人区分类">
+    <section class="celebrity-menu" id="celebrityMenu" aria-label="真人区分类">
       <div class="celebrity-menu__panel">
         <div class="celebrity-menu__panel-header">
           <span aria-hidden="true">✿</span>
@@ -207,7 +435,7 @@
     </section>
 
     <!-- Work Shelves with Vintage Scrapbook Cards -->
-    <div class="celebrity-shelves">
+    <div class="celebrity-shelves" id="celebrityShelves">
       <!-- 女团 Shelf -->
       <section class="celebrity-shelf" data-celebrity-shelf="女团">
         <div class="celebrity-shelf__heading">
@@ -872,22 +1100,417 @@
   <script src="archive-nav-config.js"></script>
   <script src="archive-nav.js"></script>
   <script>
+    // Group shelf filtering logic
+    function selectCelebrityGroup(group) {
+      if (group === 'ALL') {
+        document.querySelectorAll('[data-celebrity-shelf]').forEach(shelf => shelf.hidden = false);
+        document.querySelectorAll('[data-celebrity-group]').forEach(item => item.classList.remove('is-current'));
+        return;
+      }
+
+      document.querySelectorAll('[data-celebrity-group]').forEach(item => {
+        item.classList.toggle('is-current', item.dataset.celebrityGroup === group);
+      });
+      document.querySelectorAll('[data-celebrity-shelf]').forEach(shelf => {
+        shelf.hidden = (shelf.dataset.celebrityShelf !== group);
+      });
+      const targetShelf = document.querySelector('[data-celebrity-shelf="' + group + '"]');
+      if (targetShelf) {
+        targetShelf.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    // Floating card toast notification
+    let toastTimer = null;
+    function showCardToast(text) {
+      const toast = document.getElementById('paletasCardToast');
+      if (!toast) return;
+      toast.textContent = text;
+      toast.classList.add('is-shown');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('is-shown');
+      }, 2400);
+    }
+
+    // ==========================================
+    // 01 摇签抽卡 (LUCKY DRAW)
+    // ==========================================
+    const fortuneQuotes = [
+      '「宿命的红线系紧在此刻，今夜宜翻阅。」',
+      '「抽中了上上签！故事里的心跳正在等候共鸣。」',
+      '「星河璀璨，此篇正是你此刻的心之所向。」',
+      '「微风翻开这一页，愿你在平行时空遇见浪漫。」',
+      '「小兔摇签指南：放下烦恼，沉浸于这场冒险吧。」',
+      '「命中注定的相遇，在下一行文字里悄然绽放。」',
+      '「灯火与夜色交织，适合细读一段旧日温柔。」'
+    ];
+
+    let currentDrawnCard = null;
+
+    function triggerLuckyDraw() {
+      const btn01 = document.getElementById('bunnyTab01');
+      if (btn01) {
+        btn01.classList.remove('paletas-bunny-shake');
+        void btn01.offsetWidth;
+        btn01.classList.add('paletas-bunny-shake');
+        setTimeout(() => btn01.classList.remove('paletas-bunny-shake'), 450);
+      }
+
+      const allCards = Array.from(document.querySelectorAll('.celebrity-shelves .card'));
+      if (!allCards.length) return;
+
+      const chosenCard = allCards[Math.floor(Math.random() * allCards.length)];
+      currentDrawnCard = chosenCard;
+
+      const title = chosenCard.querySelector('h3')?.textContent.trim() || '精彩作品';
+      const imgEl = chosenCard.querySelector('.cover img');
+      const imgSrc = imgEl ? (imgEl.getAttribute('src') || '') : 'assets/covers/work-007.jpg';
+      const eyebrow = chosenCard.querySelector('.eyebrow')?.textContent.trim() || '真人区专栏';
+      const stars = chosenCard.querySelector('.stars')?.textContent.trim() || '★★★★★';
+      const quote = fortuneQuotes[Math.floor(Math.random() * fortuneQuotes.length)];
+
+      const fortuneCard = document.getElementById('paletasFortuneCard');
+      const fortuneTitle = document.getElementById('fortuneTitle');
+      const fortuneCoverImg = document.getElementById('fortuneCoverImg');
+      const fortuneEyebrow = document.getElementById('fortuneEyebrow');
+      const fortuneStars = document.getElementById('fortuneStars');
+      const fortuneQuote = document.getElementById('fortuneQuote');
+
+      if (fortuneTitle) fortuneTitle.textContent = title;
+      if (fortuneCoverImg) fortuneCoverImg.src = imgSrc;
+      if (fortuneEyebrow) fortuneEyebrow.textContent = eyebrow;
+      if (fortuneStars) fortuneStars.textContent = stars.includes('★') ? stars : '★★★★★';
+      if (fortuneQuote) fortuneQuote.textContent = quote;
+
+      if (fortuneCard) fortuneCard.hidden = false;
+      showCardToast('✿ 摇得一签！今日命定佳作已送达');
+    }
+
+    const fortuneJumpBtn = document.getElementById('fortuneJumpBtn');
+    if (fortuneJumpBtn) {
+      fortuneJumpBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!currentDrawnCard) return;
+
+        const parentShelf = currentDrawnCard.closest('[data-celebrity-shelf]');
+        if (parentShelf) parentShelf.hidden = false;
+        currentDrawnCard.style.display = '';
+
+        document.querySelectorAll('.card.card-lucky-glow').forEach(c => c.classList.remove('card-lucky-glow'));
+        currentDrawnCard.classList.add('card-lucky-glow');
+        currentDrawnCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        const fortuneCard = document.getElementById('paletasFortuneCard');
+        if (fortuneCard) fortuneCard.hidden = true;
+
+        showCardToast('✦ 已为您定位至该篇！');
+        setTimeout(() => {
+          currentDrawnCard?.classList.remove('card-lucky-glow');
+        }, 4500);
+      });
+    }
+
+    const fortuneRedrawBtn = document.getElementById('fortuneRedrawBtn');
+    if (fortuneRedrawBtn) {
+      fortuneRedrawBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        triggerLuckyDraw();
+      });
+    }
+
+    const fortuneCloseBtn = document.getElementById('paletasFortuneClose');
+    if (fortuneCloseBtn) {
+      fortuneCloseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const fortuneCard = document.getElementById('paletasFortuneCard');
+        if (fortuneCard) fortuneCard.hidden = true;
+      });
+    }
+
+    const fortuneCardEl = document.getElementById('paletasFortuneCard');
+    if (fortuneCardEl) {
+      fortuneCardEl.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    // ==========================================
+    // 02 镇圈高分 (TOP RATED) & 03 最新收录 (RECENT)
+    // ==========================================
+    let topRatedActive = false;
+    let recentActive = false;
+    const shelfOriginalCards = new Map();
+
+    function resetAllShelves(silent) {
+      topRatedActive = false;
+      recentActive = false;
+
+      document.getElementById('bunnyTab02')?.classList.remove('is-active');
+      document.getElementById('bunnyTab03')?.classList.remove('is-active');
+      document.querySelectorAll('.paletas-card-badge').forEach(b => b.remove());
+
+      shelfOriginalCards.forEach((cards, grid) => {
+        cards.forEach(c => grid.appendChild(c));
+      });
+
+      document.querySelectorAll('.celebrity-shelves .card').forEach(card => card.style.display = '');
+      document.querySelectorAll('[data-celebrity-shelf]').forEach(s => s.hidden = false);
+
+      const indicator = document.getElementById('paletasModeIndicator');
+      if (indicator) indicator.hidden = true;
+
+      if (!silent) showCardToast('已恢复全部作品展示');
+    }
+
+    function toggleTopRated() {
+      topRatedActive = !topRatedActive;
+      const btn = document.getElementById('bunnyTab02');
+
+      if (recentActive) {
+        recentActive = false;
+        document.getElementById('bunnyTab03')?.classList.remove('is-active');
+        document.querySelectorAll('.paletas-card-badge--recent').forEach(b => b.remove());
+        shelfOriginalCards.forEach((cards, grid) => {
+          cards.forEach(c => grid.appendChild(c));
+        });
+      }
+
+      if (btn) btn.classList.toggle('is-active', topRatedActive);
+
+      const indicator = document.getElementById('paletasModeIndicator');
+      const indicatorText = document.getElementById('paletasModeText');
+
+      if (topRatedActive) {
+        document.querySelectorAll('[data-celebrity-shelf]').forEach(s => s.hidden = false);
+        let highCount = 0;
+        document.querySelectorAll('.celebrity-shelves .card').forEach(card => {
+          const starsText = card.querySelector('.stars')?.textContent || '';
+          const isHigh = starsText.includes('★★★★★') || starsText.includes('★★★★☆');
+          if (isHigh) {
+            card.style.display = '';
+            highCount++;
+            if (!card.querySelector('.paletas-card-badge--gold')) {
+              const badge = document.createElement('span');
+              badge.className = 'paletas-card-badge paletas-card-badge--gold';
+              badge.textContent = '★ 镇圈精选';
+              card.appendChild(badge);
+            }
+          } else {
+            card.style.display = 'none';
+            card.querySelector('.paletas-card-badge--gold')?.remove();
+          }
+        });
+
+        if (indicator && indicatorText) {
+          indicatorText.textContent = `★ 镇圈高分模式：精选口碑力作 (${highCount} 部)`;
+          indicator.hidden = false;
+        }
+
+        showCardToast(`★ 已开启【镇圈高分】精选 (${highCount} 部)`);
+        document.getElementById('celebrityShelves')?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        resetAllShelves();
+      }
+    }
+
+    function toggleRecent() {
+      recentActive = !recentActive;
+      const btn = document.getElementById('bunnyTab03');
+
+      if (topRatedActive) {
+        topRatedActive = false;
+        document.getElementById('bunnyTab02')?.classList.remove('is-active');
+        document.querySelectorAll('.paletas-card-badge--gold').forEach(b => b.remove());
+      }
+
+      if (btn) btn.classList.toggle('is-active', recentActive);
+
+      const indicator = document.getElementById('paletasModeIndicator');
+      const indicatorText = document.getElementById('paletasModeText');
+
+      if (recentActive) {
+        document.querySelectorAll('[data-celebrity-shelf]').forEach(s => s.hidden = false);
+        document.querySelectorAll('.celebrity-shelves .card').forEach(card => card.style.display = '');
+
+        document.querySelectorAll('.celebrity-grid').forEach(grid => {
+          if (!shelfOriginalCards.has(grid)) {
+            shelfOriginalCards.set(grid, Array.from(grid.children));
+          }
+          const cards = Array.from(grid.children);
+          cards.sort((a, b) => {
+            const linkA = a.querySelector('a')?.getAttribute('href') || '';
+            const linkB = b.querySelector('a')?.getAttribute('href') || '';
+            const numA = parseInt(linkA.match(/work-(\d+)/)?.[1] || '0', 10);
+            const numB = parseInt(linkB.match(/work-(\d+)/)?.[1] || '0', 10);
+            return numB - numA;
+          });
+          cards.forEach(c => grid.appendChild(c));
+        });
+
+        const allCardsSorted = Array.from(document.querySelectorAll('.celebrity-shelves .card')).sort((a, b) => {
+          const linkA = a.querySelector('a')?.getAttribute('href') || '';
+          const linkB = b.querySelector('a')?.getAttribute('href') || '';
+          const numA = parseInt(linkA.match(/work-(\d+)/)?.[1] || '0', 10);
+          const numB = parseInt(linkB.match(/work-(\d+)/)?.[1] || '0', 10);
+          return numB - numA;
+        });
+
+        allCardsSorted.slice(0, 8).forEach(card => {
+          if (!card.querySelector('.paletas-card-badge--recent')) {
+            const badge = document.createElement('span');
+            badge.className = 'paletas-card-badge paletas-card-badge--recent';
+            badge.textContent = 'NEW 收录';
+            card.appendChild(badge);
+          }
+        });
+
+        if (indicator && indicatorText) {
+          indicatorText.textContent = '✿ 最新收录模式：按入库时间从新到旧排列';
+          indicator.hidden = false;
+        }
+
+        showCardToast('✿ 已开启【最新收录】倒序排列');
+        document.getElementById('celebrityShelves')?.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        shelfOriginalCards.forEach((cards, grid) => {
+          cards.forEach(c => grid.appendChild(c));
+        });
+        document.querySelectorAll('.paletas-card-badge--recent').forEach(b => b.remove());
+        if (indicator) indicator.hidden = true;
+        showCardToast('已恢复默认收录顺序');
+      }
+    }
+
+    const paletasModeResetBtn = document.getElementById('paletasModeResetBtn');
+    if (paletasModeResetBtn) {
+      paletasModeResetBtn.addEventListener('click', () => resetAllShelves());
+    }
+
+    // ==========================================
+    // 04 贴纸变装 (STAMPS) & 氛围滤镜切换
+    // ==========================================
+    const stampThemes = [
+      {
+        name: '【樱花火漆印】+ 柔粉微醺氛围',
+        filterClass: 'filter-rose',
+        svg: `<svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="44" fill="#c93b63" opacity="0.88"/>
+          <circle cx="50" cy="50" r="39" fill="none" stroke="#fff0f5" stroke-width="1.8" stroke-dasharray="3,2"/>
+          <circle cx="50" cy="50" r="34" fill="none" stroke="#fff0f5" stroke-width="1.2"/>
+          <path d="M50,38 C46,32 38,34 40,42 C42,47 50,52 50,52 C50,52 58,47 60,42 C62,34 54,32 50,38 Z" fill="#ffffff" opacity="0.95"/>
+          <text x="50" y="66" font-size="7.5" font-family="-apple-system, sans-serif" font-weight="800" fill="#ffffff" text-anchor="middle" letter-spacing="1">ARCHIVE 1997</text>
+          <text x="50" y="74" font-size="6" font-family="-apple-system, sans-serif" font-weight="700" fill="#ffe4ec" text-anchor="middle" letter-spacing="0.5">HANDMADE WITH LOVE</text>
+        </svg>`
+      },
+      {
+        name: '【绝密档案印】+ 经典黑白胶片',
+        filterClass: 'filter-mono',
+        svg: `<svg viewBox="0 0 100 100">
+          <rect x="12" y="24" width="76" height="52" rx="4" fill="none" stroke="#be203d" stroke-width="3.5" opacity="0.9"/>
+          <rect x="16" y="28" width="68" height="44" rx="2" fill="none" stroke="#be203d" stroke-width="1" stroke-dasharray="4,2" opacity="0.7"/>
+          <text x="50" y="45" font-size="11" font-family="-apple-system, monospace" font-weight="900" fill="#be203d" text-anchor="middle" letter-spacing="1.5">TOP SECRET</text>
+          <text x="50" y="57" font-size="7.5" font-family="-apple-system, monospace" font-weight="700" fill="#be203d" text-anchor="middle" letter-spacing="1">★ 1997.09.12 ★</text>
+          <text x="50" y="66" font-size="6" font-family="-apple-system, monospace" font-weight="600" fill="#be203d" text-anchor="middle" letter-spacing="0.8">CONFIDENTIAL FILE</text>
+        </svg>`
+      },
+      {
+        name: '【典藏五星印】+ 暖金午后时光',
+        filterClass: 'filter-amber',
+        svg: `<svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="44" fill="#b87d19" opacity="0.9"/>
+          <circle cx="50" cy="50" r="40" fill="none" stroke="#fff8e7" stroke-width="2"/>
+          <circle cx="50" cy="50" r="35" fill="none" stroke="#fff8e7" stroke-width="1" stroke-dasharray="2,2"/>
+          <text x="50" y="38" font-size="6.5" font-family="-apple-system, sans-serif" font-weight="800" fill="#fff8e7" text-anchor="middle" letter-spacing="1">SPECIAL ARCHIVE</text>
+          <text x="50" y="52" font-size="13" fill="#ffe082" text-anchor="middle">★★★★★</text>
+          <text x="50" y="64" font-size="6.5" font-family="-apple-system, sans-serif" font-weight="700" fill="#fff8e7" text-anchor="middle" letter-spacing="1">VERIFIED CLASSIC</text>
+          <path d="M42,68 L50,75 L58,68 Z" fill="#fff8e7"/>
+        </svg>`
+      },
+      {
+        name: '【巴黎情书戳】+ 宿命深邃冷调',
+        filterClass: 'filter-noir',
+        svg: `<svg viewBox="0 0 100 100">
+          <circle cx="42" cy="50" r="34" fill="none" stroke="#2c3e6b" stroke-width="2.5" opacity="0.85"/>
+          <circle cx="42" cy="50" r="28" fill="none" stroke="#2c3e6b" stroke-width="1" opacity="0.6"/>
+          <text x="42" y="44" font-size="6.5" font-family="-apple-system, serif" font-weight="700" fill="#2c3e6b" text-anchor="middle" letter-spacing="0.8">POSTE AÉRIENNE</text>
+          <text x="42" y="54" font-size="8" font-family="-apple-system, sans-serif" font-weight="800" fill="#2c3e6b" text-anchor="middle" letter-spacing="1">PARIS</text>
+          <text x="42" y="63" font-size="5.5" font-family="-apple-system, sans-serif" font-weight="600" fill="#2c3e6b" text-anchor="middle">12. SEPT. 1997</text>
+          <path d="M74,36 Q84,33 94,36 M74,43 Q84,40 94,43 M74,50 Q84,47 94,50 M74,57 Q84,54 94,57 M74,64 Q84,61 94,64" stroke="#2c3e6b" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.8"/>
+        </svg>`
+      }
+    ];
+
+    let currentStampIndex = 0;
+    function cycleStampAndFilter() {
+      currentStampIndex = (currentStampIndex + 1) % stampThemes.length;
+      const theme = stampThemes[currentStampIndex];
+
+      const stampContainer = document.getElementById('paletasActiveStamp');
+      if (stampContainer) {
+        stampContainer.innerHTML = theme.svg;
+        stampContainer.classList.remove('stamp-press');
+        void stampContainer.offsetWidth;
+        stampContainer.classList.add('stamp-press');
+      }
+
+      const heroImg = document.getElementById('celebrityHeroBanner');
+      if (heroImg) {
+        heroImg.className = 'paletas-notebook-photo-img ' + theme.filterClass;
+      }
+
+      const btn04 = document.getElementById('bunnyTab04');
+      if (btn04) {
+        btn04.classList.remove('paletas-bunny-shake');
+        void btn04.offsetWidth;
+        btn04.classList.add('paletas-bunny-shake');
+        setTimeout(() => btn04.classList.remove('paletas-bunny-shake'), 450);
+      }
+
+      showCardToast(`✿ 贴纸变装：${theme.name}`);
+    }
+
+    // Attach Click Handlers to 4 Bunny Buttons
+    document.getElementById('bunnyTab01')?.addEventListener('click', triggerLuckyDraw);
+    document.getElementById('bunnyTab02')?.addEventListener('click', toggleTopRated);
+    document.getElementById('bunnyTab03')?.addEventListener('click', toggleRecent);
+    document.getElementById('bunnyTab04')?.addEventListener('click', cycleStampAndFilter);
+
+    // Lower category list buttons
     document.querySelectorAll('[data-celebrity-group]').forEach(button => {
       button.addEventListener('click', () => {
         const group = button.dataset.celebrityGroup;
-        document.querySelectorAll('[data-celebrity-group]').forEach(item => item.classList.toggle('is-current', item === button));
-        document.querySelectorAll('[data-celebrity-shelf]').forEach(shelf => shelf.hidden = (shelf.dataset.celebrityShelf !== group));
-        const targetShelf = document.querySelector('[data-celebrity-shelf="' + group + '"]');
-        if (targetShelf) {
-          targetShelf.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        resetAllShelves(true);
+        selectCelebrityGroup(group);
       });
     });
 
-    // Custom Hero Photo Selector & Drag-Drop Uploader
-    const photoTrigger = document.getElementById('scrapbookPhotoTrigger');
+    // Paletas Search Filter
+    const searchInput = document.getElementById('paletasSearchInput');
+    const searchBtn = document.getElementById('paletasSearchBtn');
+    function executeFilter(term) {
+      const q = (term || '').trim().toLowerCase();
+      document.querySelectorAll('.celebrity-shelves .card').forEach(card => {
+        if (!q) {
+          card.style.display = '';
+          return;
+        }
+        const text = card.textContent.toLowerCase();
+        card.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => executeFilter(e.target.value));
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') executeFilter(searchInput.value);
+      });
+    }
+    if (searchBtn && searchInput) {
+      searchBtn.addEventListener('click', () => executeFilter(searchInput.value));
+    }
+
+    // Hero Photocard Uploader & Drag-and-Drop
+    const photoTrigger = document.getElementById('celebrityBannerTrigger');
     const photoInput = document.getElementById('heroPhotoFileInput');
-    const heroImg = document.getElementById('heroPhotoImg');
+    const heroImg = document.getElementById('celebrityHeroBanner');
 
     // Load saved image from localStorage if available
     const savedCustomPhoto = localStorage.getItem('celebrity_hero_photo_custom');
@@ -906,7 +1529,6 @@
         } catch (err) {
           console.warn('LocalStorage limit reached for custom image', err);
         }
-        // Also persist to server disk assets/tied-hands-ribbon.jpg
         fetch('/api/upload-hero-image', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -917,7 +1539,11 @@
     }
 
     if (photoTrigger && photoInput) {
-      photoTrigger.addEventListener('click', () => photoInput.click());
+      photoTrigger.addEventListener('click', (e) => {
+        // Only trigger file picker if not clicking fortune card or its children
+        if (e.target.closest('#paletasFortuneCard')) return;
+        photoInput.click();
+      });
       photoInput.addEventListener('change', (e) => {
         if (e.target.files && e.target.files[0]) {
           handleImageFile(e.target.files[0]);

@@ -36,9 +36,12 @@ app.post('/api/upload-hero-image', (req, res) => {
     }
     const matches = dataUrl.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
     const buffer = matches ? Buffer.from(matches[2], 'base64') : Buffer.from(dataUrl, 'base64');
-    const targetPath = path.join(__dirname, 'assets', 'tied-hands-ribbon.jpg');
+    const targetPath = path.join(__dirname, 'assets', 'celebrity-hero-photo.jpg');
     fs.writeFileSync(targetPath, buffer);
-    return res.json({ success: true, path: '/assets/tied-hands-ribbon.jpg?t=' + Date.now() });
+    try {
+      fs.writeFileSync(path.join(__dirname, 'assets', 'tied-hands-ribbon.jpg'), buffer);
+    } catch (_) {}
+    return res.json({ success: true, path: '/assets/celebrity-hero-photo.jpg?t=' + Date.now() });
   } catch (err) {
     console.error('Failed to save hero image:', err);
     return res.status(500).json({ error: err.message });
