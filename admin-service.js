@@ -447,6 +447,7 @@ export function updateExistingWork(workId, inputData) {
   // 更新卡片
   injectWorkIntoHtml('works.html', target, coverFileName, cropX, cropY, zoom);
   injectWorkIntoHtml('index.html', target, coverFileName, cropX, cropY, zoom);
+  syncWorkToCelebrity(target, { coverFileName, cropX, cropY, zoom });
 
   return { success: true, work: target };
 }
