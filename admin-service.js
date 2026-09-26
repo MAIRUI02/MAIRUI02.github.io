@@ -317,8 +317,7 @@ export function deleteExistingWork(workId) {
     const filePath = path.join(__dirname, filename);
     let html = fs.readFileSync(filePath, 'utf8');
     const originalHtml = html;
-    const escapedId = id.replace(/[.*+?^${}()|[\]\\]/g, '\\// 更新已有作品信息
-export function updateExistingWork');
+    const escapedId = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const cardRegex = new RegExp('<article\\b[^>]*class=["\'][^"\']*\\bcard\\b[^"\']*["\'][^>]*>[\\s\\S]*?<a\\b[^>]*href=["\']works/' + escapedId + '\\.html["\'][^>]*>[\\s\\S]*?<\\/article>', 'gi');
     html = html.replace(cardRegex, '');
     const linkRegex = new RegExp('<a\\b[^>]*href=["\']works/' + escapedId + '\\.html["\'][^>]*>[\\s\\S]*?<\\/a>', 'gi');
