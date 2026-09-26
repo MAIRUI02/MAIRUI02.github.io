@@ -90,7 +90,12 @@ if errorlevel 1 (
 
 echo.
 echo [4/5] 准备提交...
-git add new-cover-mapping.json cover-overrides.json assets/covers mapping-imported
+git add .gitignore upload-covers.bat new-cover-mapping.json cover-overrides.json assets/covers mapping-imported
+if errorlevel 1 (
+  echo [错误] 添加上传文件失败，请检查上方提示。
+  pause
+  exit /b 1
+)
 git diff --cached --quiet
 if not errorlevel 1 (
   echo 没有需要上传的封面变更。
