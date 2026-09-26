@@ -13,11 +13,18 @@ if not exist "node_modules\express\package.json" (
     exit /b 1
   )
 )
-node -e "fetch('http://127.0.0.1:3000/api/admin/check-auth').then(r=>r.json()).then(d=>process.exit(typeof d.authenticated==='boolean'?0:1)).catch(()=>process.exit(1))"
-if not errorlevel 1 (
-  start "" "http://127.0.0.1:3000/studio.html"
-  exit /b 0
+
+rem Restart an existing Studio Node server so pulled backend changes take effect.
+for /f "tokens=5" %%P in ('netstat -ano ^| findstr /R /C:":3000 .*LISTENING"') do (
+  for /f "tokens=1" %%N in ('tasklist /FI "PID eq %%P" /NH') do (
+    if /I "%%N"=="node.exe" (
+      echo Restarting existing Studio server on port 3000...
+      taskkill /PID %%P /F >nul 2>nul
+      timeout /t 1 /nobreak >nul
+    )
+  )
 )
+
 start "" "http://127.0.0.1:3000/studio.html"
 echo Open http://127.0.0.1:3000/studio.html in your browser.
 echo Keep this window open while using Studio. Close it to stop.
