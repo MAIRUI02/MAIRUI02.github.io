@@ -1,4 +1,5 @@
 import express from 'express';
+import { readEditableWork, editExistingWork, readTagLibrary, saveTag } from './studio-editor-service.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -110,6 +111,15 @@ app.get('/api/admin/next-id', (req, res) => {
 });
 
 // 5. 录入新作品（全站自动同步生效）
+app.get('/api/admin/tags', requireAdminAuth, (req, res) => {
+  try { res.json({ tags: readTagLibrary() }); }
+  catch (err) { res.status(500).json({ error: err.message }); }
+});
+app.post('/api/admin/tags', requireAdminAuth, (req, res) => {
+  try { res.json({ tags: saveTag(req.body?.tag) }); }
+  catch (err) { res.status(400).json({ error: err.message }); }
+});
+
 app.post('/api/admin/works', requireAdminAuth, (req, res) => {
   try {
     const result = createNewWork(req.body);
@@ -124,9 +134,16 @@ app.post('/api/admin/works', requireAdminAuth, (req, res) => {
 });
 
 // 6. 更新已有作品
+app.get('/api/admin/works/:id', requireAdminAuth, (req, res) => {
+  try {
+    const work = readEditableWork(req.params.id);
+    return work ? res.json({ success: true, work }) : res.status(404).json({ error: '未找到作品' });
+  } catch (err) { return res.status(500).json({ error: err.message }); }
+});
+
 app.put('/api/admin/works/:id', requireAdminAuth, (req, res) => {
   try {
-    const result = updateExistingWork(req.params.id, req.body);
+    const result = editExistingWork(req.params.id, req.body);
     if (!result.success) {
       return res.status(400).json(result);
     }
@@ -147,6 +164,9 @@ app.get(['/works', '/works/'], (req, res) => {
   res.sendFile(path.join(__dirname, 'works.html'));
 });
 
+// Keep local credentials out of static responses.
+app.get('/admin-config.json', (req, res) => res.sendStatus(404));
+
 // Static assets serving with HTML extension support
 app.use(express.static(__dirname, {
   extensions: ['html'],
@@ -161,6 +181,6 @@ app.use((req, res, next) => {
   next();
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on http://0.0.0.0:${PORT}`);
+app.listen(PORT, '127.0.0.1', () => {
+  console.log(`Studio: http://127.0.0.1:${PORT}/studio.html`);
 });

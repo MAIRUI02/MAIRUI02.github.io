@@ -133,7 +133,7 @@ export function saveCoverImage(workId, base64Data) {
 // 生成单个作品独立 HTML 详情页 (works/work-XXX.html)
 export function generateWorkDetailHtml(work, extra = {}) {
   const {
-    playStatus = '已游玩',
+    playStatus = '待读清单',
     playTime = '待记录',
     house = '未设定',
     sexuality = 'bg',
@@ -257,7 +257,7 @@ export function createNewWork(inputData) {
 
   // 6. 自动生成 works/work-XXX.html 详情页
   const detailHtml = generateWorkDetailHtml(workRecord, {
-    playStatus: inputData.playStatus || '追平',
+    playStatus: inputData.playStatus || '待读清单',
     playTime: inputData.playTime || '未设定',
     house: inputData.house || '未设定',
     sexuality: inputData.sexuality || 'bg',

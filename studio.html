@@ -590,10 +590,9 @@
             <div class="studio-field">
               <label for="workPlayStatus">游玩状态</label>
               <select id="workPlayStatus" class="studio-select">
-                <option value="追平" selected>追平</option>
-                <option value="完结通关">完结通关</option>
-                <option value="二刷">二刷</option>
-                <option value="浅尝">浅尝</option>
+                <optgroup label="待办"><option value="待读清单" selected>待读清单</option></optgroup>
+                <optgroup label="进行中"><option value="在读">在读</option><option value="追平">追平</option></optgroup>
+                <optgroup label="已完成"><option value="通关单线但仍有心仪分线，等待下周目">通关单线但仍有心仪分线，等待下周目</option><option value="读完">读完</option><option value="弃游">弃游</option></optgroup>
               </select>
             </div>
           </div>
@@ -631,7 +630,7 @@
             </div>
 
             <div style="margin-top:12px;">
-              <span style="font-size:11.5px;font-weight:600;color:var(--studio-muted);">常用快捷标签点选：</span>
+              <span style="font-size:11.5px;font-weight:600;color:var(--studio-muted);">已有标签（新标签会自动保存）：</span>
               <div class="chip-cloud" id="quickTagsCloud">
                 <!-- 常用标签 -->
                 <span class="quick-chip" data-tag="HP">HP</span>
@@ -721,7 +720,7 @@
             </div>
             <div class="crop-slider-row">
               <span>缩放倍率</span>
-              <input type="range" id="cropZoom" min="100" max="150" value="100">
+              <input type="range" id="cropZoom" min="100" max="155" value="100">
               <span id="cropZoomVal" style="width:36px;text-align:right;">1.00x</span>
             </div>
           </div>
@@ -735,15 +734,18 @@
 
           <div class="studio-field">
             <label for="workRepo">安利寄语与评述正文 <small>(支持多段文字，输入 # 或 ## 自动生成章节小标题)</small></label>
+            <div id="existingRepoEditor" contenteditable="true" class="studio-textarea" style="min-height:240px;max-height:650px;overflow:auto" hidden></div>
+            <p id="editRepoHint" hidden>可直接修改原有正文；未修改的图片、链接和排版会保留。</p>
             <textarea id="workRepo" class="studio-textarea" rows="8" placeholder="写下你的私心评价、故事亮点、各角色分线点评…&#10;&#10;例如：&#10;阿斯托利亚个人向，文字细腻深沉。&#10;&#10;## 德拉科·马尔福&#10;老马吃嫩草，偏偏当事人如磐石不为所动…"></textarea>
           </div>
         </div>
 
         <!-- 提交发布条 -->
         <div class="submit-bar">
+          <button type="button" class="studio-btn" id="cancelEditBtn" hidden>取消编辑</button>
           <button type="reset" class="studio-btn" id="resetBtn">重置表单</button>
           <button type="submit" class="studio-btn studio-btn--primary" id="publishBtn" style="padding:10px 24px;font-size:15px;">
-            确认入库并全站发布
+            保存新作品到本机
           </button>
         </div>
       </form>
@@ -913,6 +915,7 @@
       const customTagInput = document.getElementById('customTagInput');
       const addCustomTagBtn = document.getElementById('addCustomTagBtn');
 
+      function escapeStudio(value) { return String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
       function renderSelectedTags() {
         if (selectedTags.length === 0) {
           selectedTagsBox.innerHTML = '';
@@ -921,7 +924,7 @@
         }
         selectedTagsBox.innerHTML = selectedTags.map((t, idx) => `
           <span class="tag-badge">
-            <span>${t}</span>
+            <span>${escapeStudio(t)}</span>
             <span class="tag-badge__remove" data-idx="${idx}">✕</span>
           </span>
         `).join('');
@@ -942,28 +945,39 @@
         renderSelectedTags();
       }
 
-      document.querySelectorAll('#quickTagsCloud .quick-chip').forEach(chip => {
-        chip.addEventListener('click', () => {
-          addTag(chip.dataset.tag);
+      const tagCloud = document.getElementById('quickTagsCloud');
+      const builtinTags = [...tagCloud.querySelectorAll('[data-tag]')].map(el => el.dataset.tag);
+      function renderTagLibrary(tags) {
+        tagCloud.replaceChildren();
+        [...new Set([...builtinTags,...tags])].forEach(tag => {
+          const chip = document.createElement('button');
+          chip.type = 'button'; chip.className = 'quick-chip'; chip.dataset.tag = tag; chip.textContent = tag;
+          chip.addEventListener('click', () => addTag(tag));
+          tagCloud.appendChild(chip);
         });
-      });
-
-      addCustomTagBtn.addEventListener('click', () => {
-        if (customTagInput.value) {
-          addTag(customTagInput.value);
-          customTagInput.value = '';
-        }
-      });
-
-      customTagInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-          e.preventDefault();
-          if (customTagInput.value) {
-            addTag(customTagInput.value);
-            customTagInput.value = '';
-          }
-        }
-      });
+      }
+      async function loadTagLibrary() {
+        const res = await fetch('/api/admin/tags', {headers:{Authorization:`Bearer ${currentToken}`}});
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || '标签库读取失败');
+        renderTagLibrary(data.tags);
+      }
+      async function saveCustomTag() {
+        const tag = customTagInput.value.trim();
+        if (!tag) return;
+        addCustomTagBtn.disabled = true;
+        try {
+          const res = await fetch('/api/admin/tags', {method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${currentToken}`},body:JSON.stringify({tag})});
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || '标签保存失败');
+          addTag(tag); renderTagLibrary(data.tags); customTagInput.value = '';
+          showToast('标签已保存，下次可直接点选');
+        } catch(err) { alert(err.message); }
+        finally { addCustomTagBtn.disabled = false; }
+      }
+      renderTagLibrary([]);
+      addCustomTagBtn.addEventListener('click', saveCustomTag);
+      customTagInput.addEventListener('keydown', e => { if(e.key === 'Enter') {e.preventDefault(); saveCustomTag();} });
 
       // 4. 角色快捷点选
       const charsInput = document.getElementById('workCharacters');
@@ -1046,8 +1060,9 @@
           const res = await fetch('/api/admin/works');
           const data = await res.json();
           allWorksData = data.works || [];
+          await loadTagLibrary();
           document.getElementById('totalWorksCount').textContent = allWorksData.length;
-          document.getElementById('nextIdBadge').textContent = `分配档案号：${data.nextId}`;
+          if (!editingId) document.getElementById('nextIdBadge').textContent = `分配档案号：${data.nextId}`;
         } catch (e) {
           console.error(e);
         }
@@ -1055,6 +1070,64 @@
 
       // 7. 表单提交发布
       const createForm = document.getElementById('createWorkForm');
+      let editingId = null;
+      let originalRepoHtml = '';
+      let originalEditorHtml = '';
+      const richEditor = document.getElementById('existingRepoEditor');
+      function finishEditing() {
+        editingId = null;
+        createForm.reset();
+        selectedTags = []; renderSelectedTags(); coverBase64 = null;
+        richEditor.hidden = true;
+        document.getElementById('workRepo').hidden = false;
+        document.getElementById('editRepoHint').hidden = true;
+        document.getElementById('cancelEditBtn').hidden = true;
+        document.getElementById('resetBtn').hidden = false;
+        document.getElementById('publishBtn').textContent = '保存新作品到本机';
+        previewImg.src = 'assets/covers/work-001.png'; updatePreviewTransform();
+        loadInitialData();
+      }
+      document.getElementById('cancelEditBtn').addEventListener('click', finishEditing);
+      document.getElementById('manageTableBody').addEventListener('click', async e => {
+        const button = e.target.closest('[data-edit-work]');
+        if (!button) return;
+        try {
+          const res = await fetch('/api/admin/works/' + encodeURIComponent(button.dataset.editWork), { headers: { Authorization: `Bearer ${currentToken}` } });
+          const result = await res.json();
+          if (!res.ok) throw new Error(result.error || '读取作品失败');
+          const w = result.work;
+          editingId = w.id;
+          const ids = {name:'workName',platform:'workPlatform',status:'workStatus',rating:'workRating',playStatus:'workPlayStatus',house:'workHouse',sexuality:'workSexuality',playTime:'workPlayTime',characters:'workCharacters',cropX:'cropX',cropY:'cropY',zoom:'cropZoom'};
+          for (const [key,id] of Object.entries(ids)) {
+            const el = document.getElementById(id), value = String(w[key] ?? '');
+            if (el.tagName === 'SELECT' && !Array.from(el.options).some(o => o.value === value)) el.add(new Option(value || '未设定',value));
+            el.value = value;
+          }
+          selectedTags = [...(w.tags || [])]; renderSelectedTags();
+          coverBase64 = null; fileInput.value = '';
+          previewImg.src = w.coverUrl || ''; updatePreviewTransform();
+          originalRepoHtml = w.repoHtml || '';
+          richEditor.innerHTML = originalRepoHtml;
+          // Original detail pages resolve relative links from /works/.
+          richEditor.querySelectorAll('[src],a[href]').forEach(el => {
+            for (const attr of ['src','href']) if (el.hasAttribute(attr)) {
+              const value = el.getAttribute(attr);
+              el.setAttribute(attr, new URL(value, location.origin + '/works/' + w.id + '.html').href);
+              el.dataset['original' + attr] = value;
+            }
+          });
+          originalEditorHtml = richEditor.innerHTML;
+          richEditor.hidden = false;
+          document.getElementById('workRepo').hidden = true;
+          document.getElementById('editRepoHint').hidden = false;
+          document.getElementById('cancelEditBtn').hidden = false;
+          document.getElementById('resetBtn').hidden = true;
+          document.getElementById('publishBtn').textContent = '保存修改到本机';
+          document.getElementById('nextIdBadge').textContent = '正在编辑：' + w.id;
+          document.querySelector('[data-tab="create"]').click();
+          createForm.scrollIntoView({behavior:'smooth'});
+        } catch(err) { alert(err.message); }
+      });
       createForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -1066,7 +1139,7 @@
 
         const publishBtn = document.getElementById('publishBtn');
         publishBtn.disabled = true;
-        publishBtn.textContent = '正在发布入库并更新全站…';
+        publishBtn.textContent = '正在保存到本机…';
 
         const payload = {
           name,
@@ -1087,8 +1160,18 @@
         };
 
         try {
-          const res = await fetch('/api/admin/works', {
-            method: 'POST',
+          if (editingId && richEditor.innerHTML !== originalEditorHtml) {
+            const clone = richEditor.cloneNode(true);
+            clone.querySelectorAll('[data-originalsrc],[data-originalhref]').forEach(el => {
+              for (const attr of ['src','href']) {
+                const key = 'original' + attr;
+                if (el.dataset[key] !== undefined) { el.setAttribute(attr, el.dataset[key]); delete el.dataset[key]; }
+              }
+            });
+            payload.repoHtml = clone.innerHTML;
+          }
+          const res = await fetch('/api/admin/works' + (editingId ? '/' + encodeURIComponent(editingId) : ''), {
+            method: editingId ? 'PUT' : 'POST',
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${currentToken}`
@@ -1098,15 +1181,11 @@
           const result = await res.json();
 
           if (result.success) {
-            showToast(`作品《${name}》已成功发布入库！`);
-            if (confirm(`作品《${name}》入库成功（${result.work.id}）！\n\n是否立即打开该作品详情页进行查阅？`)) {
+            showToast('已保存到本机，上传 GitHub 后网站才会更新。');
+            if (confirm(`作品已保存到本机（${result.work.id}）。上传 GitHub 后网站才会更新。\n\n是否立即打开该作品详情页进行查阅？`)) {
               window.open(result.detailUrl, '_blank');
             }
-            createForm.reset();
-            selectedTags = [];
-            renderSelectedTags();
-            coverBase64 = null;
-            loadInitialData();
+            finishEditing();
           } else {
             alert('发布失败：' + (result.error || '未知错误'));
           }
@@ -1114,7 +1193,7 @@
           alert('请求出错，请重试');
         } finally {
           publishBtn.disabled = false;
-          publishBtn.textContent = '确认入库并全站发布';
+          publishBtn.textContent = editingId ? '保存修改到本机' : '保存新作品到本机';
         }
       });
 
@@ -1134,12 +1213,13 @@
           <tr>
             <td><code>${w.id}</code></td>
             <td><img src="assets/covers/${w.id}.png" onerror="this.src='assets/covers/work-001.png'" class="table-thumb" alt=""></td>
-            <td><strong>${w.name}</strong></td>
-            <td>${w.platform || '-'}</td>
-            <td><span style="font-size:11px;background:#f2ede4;padding:2px 6px;border-radius:2px;">${w.status || '-'}</span></td>
+            <td><strong>${escapeStudio(w.name)}</strong></td>
+            <td>${escapeStudio(w.platform || '-')}</td>
+            <td><span style="font-size:11px;background:#f2ede4;padding:2px 6px;border-radius:2px;">${escapeStudio(w.status || '-')}</span></td>
             <td>${w.rating || '<span style="color:#aaa;">-</span>'}</td>
-            <td style="max-width:200px;font-size:11px;color:#705e52;">${(w.tags||[]).slice(0,3).join(', ')}</td>
+            <td style="max-width:200px;font-size:11px;color:#705e52;">${escapeStudio((w.tags||[]).slice(0,3).join(', '))}</td>
             <td style="text-align:center;">
+              <button type="button" class="studio-btn" data-edit-work="${w.id}" style="padding:3px 8px;font-size:11.5px">编辑</button>
               <a href="works/${w.id}.html" target="_blank" class="studio-btn" style="padding:3px 8px;font-size:11.5px;text-decoration:none;">详情 ↗</a>
             </td>
           </tr>
