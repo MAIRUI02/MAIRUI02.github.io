@@ -322,6 +322,20 @@ export function deleteExistingWork(workId) {
     html = html.replace(cardRegex, '');
     const linkRegex = new RegExp('<a\\b[^>]*href=["\']works/' + escapedId + '\\.html["\'][^>]*>[\\s\\S]*?<\\/a>', 'gi');
     html = html.replace(linkRegex, '');
+
+    html = html.replace(
+      /window\.(?:WORKS|WORKS_DATA)\s*=\s*(\[[\s\S]*?\]);/g,
+      (match, json) => {
+        try {
+          const items = JSON.parse(json);
+          const filtered = items.filter(w => w?.id !== id);
+          const varName = match.match(/window\.(WORKS|WORKS_DATA)/)?.[1] || 'WORKS';
+          return 'window.' + varName + '=' + JSON.stringify(filtered).replace(/</g, '\\u003c') + ';';
+        } catch (_) {
+          return match;
+        }
+      }
+    );
     html = html.replace(/<h2>\d+\s*部作品[，,]\s*等待被翻阅<\/h2>/g, '<h2>' + nextWorks.length + ' 部作品，等待被翻阅</h2>');
     if (html !== originalHtml) fs.writeFileSync(filePath, html, 'utf8');
   }
