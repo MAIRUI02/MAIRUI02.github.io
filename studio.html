@@ -1110,6 +1110,10 @@
           deleteButton.textContent = '删除中…';
           try {
             const res = await fetch('/api/admin/works/' + encodeURIComponent(id), { method: 'DELETE', headers: { Authorization: `Bearer ${currentToken}` } });
+            const contentType = res.headers.get('content-type') || '';
+            if (!contentType.includes('application/json')) {
+              throw new Error('本地后台仍是旧版本。请关闭 Studio 窗口后重新运行 start-studio.bat，再刷新页面重试。');
+            }
             const result = await res.json();
             if (!res.ok || !result.success) throw new Error(result.error || '删除失败');
             if (editingId === id) finishEditing();
