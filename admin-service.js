@@ -203,6 +203,20 @@ export function injectWorkIntoHtml(pageFile, work, coverFileName, cropX = 50, cr
   fs.writeFileSync(filePath, html, 'utf8');
 }
 
+function refreshCelebrityCounts() {
+  const filePath = path.join(__dirname, 'celebrity.html');
+  if (!fs.existsSync(filePath)) return;
+  const $ = load(fs.readFileSync(filePath, 'utf8'));
+  $('[data-celebrity-shelf]').each((_, el) => {
+    const shelf = $(el);
+    const group = String(shelf.attr('data-celebrity-shelf') || '').trim();
+    const count = shelf.find('.celebrity-grid > .card').length;
+    shelf.find('.celebrity-shelf__heading span').first().text(count + ' 部记录');
+    $('[data-celebrity-group]').filter((_, btn) => String($(btn).attr('data-celebrity-group') || '').trim() === group).find('b').first().text(String(count));
+  });
+  fs.writeFileSync(filePath, $.html(), 'utf8');
+}
+
 export function syncWorkToCelebrity(work, options = {}) {
   const filePath = path.join(__dirname, 'celebrity.html');
   if (!fs.existsSync(filePath) || !work?.id) return { synced: false, groups: [] };
@@ -234,15 +248,8 @@ export function syncWorkToCelebrity(work, options = {}) {
     }
   }
 
-  $('[data-celebrity-shelf]').each((_, el) => {
-    const shelf = $(el);
-    const group = String(shelf.attr('data-celebrity-shelf') || '').trim();
-    const count = shelf.find('.celebrity-grid > .card').length;
-    shelf.find('.celebrity-shelf__heading span').first().text(count + ' 部记录');
-    $('[data-celebrity-group]').filter((_, btn) => String($(btn).attr('data-celebrity-group') || '').trim() === group).find('b').first().text(String(count));
-  });
-
   fs.writeFileSync(filePath, $.html(), 'utf8');
+  refreshCelebrityCounts();
   return { synced: isCelebrity, groups: targets };
 }
 
@@ -385,6 +392,7 @@ export function deleteExistingWork(workId) {
     if (html !== originalHtml) fs.writeFileSync(filePath, html, 'utf8');
   }
 
+  refreshCelebrityCounts();
   return { success: true, deletedId: id, deletedName: target.name, totalWorks: nextWorks.length };
 }
 
