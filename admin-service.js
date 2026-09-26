@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
+import { load } from 'cheerio';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -202,6 +203,56 @@ export function injectWorkIntoHtml(pageFile, work, coverFileName, cropX = 50, cr
   fs.writeFileSync(filePath, html, 'utf8');
 }
 
+function refreshCelebrityCounts() {
+  const filePath = path.join(__dirname, 'celebrity.html');
+  if (!fs.existsSync(filePath)) return;
+  const $ = load(fs.readFileSync(filePath, 'utf8'));
+  $('[data-celebrity-shelf]').each((_, el) => {
+    const shelf = $(el);
+    const group = String(shelf.attr('data-celebrity-shelf') || '').trim();
+    const count = shelf.find('.celebrity-grid > .card').length;
+    shelf.find('.celebrity-shelf__heading span').first().text(count + ' 部记录');
+    $('[data-celebrity-group]').filter((_, btn) => String($(btn).attr('data-celebrity-group') || '').trim() === group).find('b').first().text(String(count));
+  });
+  fs.writeFileSync(filePath, $.html(), 'utf8');
+}
+
+export function syncWorkToCelebrity(work, options = {}) {
+  const filePath = path.join(__dirname, 'celebrity.html');
+  if (!fs.existsSync(filePath) || !work?.id) return { synced: false, groups: [] };
+  const $ = load(fs.readFileSync(filePath, 'utf8'));
+  const tags = new Set((work.tags || []).map(t => String(t).trim()).filter(Boolean));
+  const isCelebrity = tags.has('真人区');
+
+  $('.celebrity-shelf .card').each((_, el) => {
+    if ($(el).find('a[href="works/' + work.id + '.html"]').length) $(el).remove();
+  });
+
+  const groups = $('[data-celebrity-group]').map((_, el) => String($(el).attr('data-celebrity-group') || '').trim()).get();
+  let targets = isCelebrity ? groups.filter(g => g && g !== '其他真人' && tags.has(g)) : [];
+  if (isCelebrity && targets.length === 0 && groups.includes('其他真人')) targets = ['其他真人'];
+
+  if (isCelebrity) {
+    const coverMap = readJsonSafe(COVER_MAPPING_FILE);
+    const coverFileName = options.coverFileName || coverMap[work.id]?.file || (work.id + '.png');
+    const overrides = readJsonSafe(COVER_OVERRIDES_FILE)[work.id] || {};
+    const cropX = Number(options.cropX ?? overrides.x ?? 50);
+    const cropY = Number(options.cropY ?? overrides.y ?? 20);
+    const zoom = Number(options.zoom ?? overrides.zoom ?? 100);
+    const scale = (zoom / 100).toFixed(2);
+    const chips = (work.tags || []).slice(0, 4).map(t => '<span>' + escapeHtml(t) + '</span>').join('');
+    const card = '<article class="card"><a href="works/' + work.id + '.html" class="card-link"><div class="cover verified"><img src="assets/covers/' + encodeURIComponent(coverFileName) + '" alt="' + escapeHtml(work.name) + ' 封面" style="object-position:' + cropX + '% ' + cropY + '%;transform:scale(' + scale + ');transform-origin:' + cropX + '% ' + cropY + '%;"><small>作品封面</small></div><div class="card-body"><p class="eyebrow">' + escapeHtml(work.platform || '橙光') + ' · ' + escapeHtml(work.status || '连载中') + '</p><h3>' + escapeHtml(work.name) + '</h3><span class="stars" aria-label="推荐指数 ' + escapeHtml(work.rating || '暂无评分') + '">' + escapeHtml(work.rating || '暂无评分') + '</span><div class="chips">' + chips + '</div></div></a></article>';
+    for (const group of targets) {
+      const shelf = $('[data-celebrity-shelf]').filter((_, el) => String($(el).attr('data-celebrity-shelf') || '').trim() === group).first();
+      shelf.find('.celebrity-grid').first().prepend(card);
+    }
+  }
+
+  fs.writeFileSync(filePath, $.html(), 'utf8');
+  refreshCelebrityCounts();
+  return { synced: isCelebrity, groups: targets };
+}
+
 // 核心业务：录入并全站发布新作品
 export function createNewWork(inputData) {
   const name = String(inputData.name || '').trim();
@@ -272,6 +323,7 @@ export function createNewWork(inputData) {
   // 7. 更新 works.html 与 index.html 中的卡片
   injectWorkIntoHtml('works.html', workRecord, coverFileName, cropX, cropY, zoom);
   injectWorkIntoHtml('index.html', workRecord, coverFileName, cropX, cropY, zoom);
+  syncWorkToCelebrity(workRecord, { coverFileName, cropX, cropY, zoom });
 
   return {
     success: true,
@@ -340,6 +392,7 @@ export function deleteExistingWork(workId) {
     if (html !== originalHtml) fs.writeFileSync(filePath, html, 'utf8');
   }
 
+  refreshCelebrityCounts();
   return { success: true, deletedId: id, deletedName: target.name, totalWorks: nextWorks.length };
 }
 
@@ -402,6 +455,7 @@ export function updateExistingWork(workId, inputData) {
   // 更新卡片
   injectWorkIntoHtml('works.html', target, coverFileName, cropX, cropY, zoom);
   injectWorkIntoHtml('index.html', target, coverFileName, cropX, cropY, zoom);
+  syncWorkToCelebrity(target, { coverFileName, cropX, cropY, zoom });
 
   return { success: true, work: target };
 }
