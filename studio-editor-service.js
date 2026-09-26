@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { load } from 'cheerio';
-import { readWorksArray, writeWorksArray, saveCoverImage, syncWorkToCelebrity } from './admin-service.js';
+import { readWorksArray, writeWorksArray, saveCoverImage, syncWorkToCelebrity, syncMasterworksLibrary } from './admin-service.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const readMap = name => JSON.parse(fs.readFileSync(path.join(root, name), 'utf8'));
@@ -141,5 +141,6 @@ export function editExistingWork(id, input) {
   writeMap('cover-overrides.json', overrides);
   for (const [file, html] of writes) fs.writeFileSync(file, html);
   syncWorkToCelebrity(work, { cropX: data.cropX, cropY: data.cropY, zoom: data.zoom });
+  syncMasterworksLibrary();
   return { success:true, work, detailUrl:'works/' + id + '.html' };
 }
