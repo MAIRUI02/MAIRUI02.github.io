@@ -1,0 +1,227 @@
+/* ==========================================================================
+   SEARCH AUTOCOMPLETE & SUGGESTIONS (搜索实时模糊匹配联想列表)
+   根据作品名、分类标签、攻略角色名称实时匹配
+   《閲読器作品記録》 · keyanrenshi.xyz
+   ========================================================================== */
+
+.search-autocomplete-wrapper {
+  position: relative !important;
+}
+
+.search-autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 7px);
+  left: 0;
+  right: 0;
+  z-index: 10001;
+  background: #fffdf8;
+  border: 2.5px solid #334139;
+  border-radius: 9px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2), 3px 3px 0 #b9cbb4;
+  max-height: 420px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.16s ease, transform 0.16s ease, visibility 0.16s ease;
+  scrollbar-width: thin;
+}
+
+.search-autocomplete-dropdown.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.ac-category {
+  display: flex;
+  flex-direction: column;
+}
+
+.ac-category + .ac-category {
+  border-top: 2px solid #ecdcd0;
+}
+
+.ac-category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background: #f5ebe0;
+  font-size: 11px;
+  font-weight: 700;
+  color: #7d6355;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  letter-spacing: 0.05em;
+  user-select: none;
+}
+
+.ac-category-header span:last-child {
+  font-size: 10px;
+  color: #a89487;
+}
+
+.ac-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 12px;
+  background: #ffffff;
+  border-bottom: 1px solid #f6eee3;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  text-decoration: none;
+  color: inherit;
+  user-select: none;
+}
+
+.ac-item:last-child {
+  border-bottom: none;
+}
+
+.ac-item:hover,
+.ac-item.is-focused {
+  background: #fbf0e2;
+  padding-left: 16px;
+  border-left: 3.5px solid #7d2632;
+}
+
+.ac-item-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ac-item-kind {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+  background: #f0e8dc;
+  color: #7d6b5e;
+  border: 1px solid #d8ccbd;
+  flex: 0 0 auto;
+}
+
+.ac-item-kind--tag {
+  background: #fdf5ef;
+  color: #9c4c23;
+  border-color: #eed6c5;
+}
+
+.ac-item-kind--char {
+  background: #eff5f8;
+  color: #2b5b75;
+  border-color: #cbe0ec;
+}
+
+.ac-item-kind--work {
+  background: #f7eff9;
+  color: #72377c;
+  border-color: #e4d2e8;
+}
+
+.ac-item-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.ac-item-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #2b221d;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ac-item-meta {
+  font-size: 10.5px;
+  color: #8c7667;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.ac-item-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 0 0 auto;
+}
+
+.ac-badge {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: ui-monospace, monospace;
+  background: #f0e6da;
+  color: #6d5b50;
+  white-space: nowrap;
+}
+
+.ac-jump-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 7px;
+  border-radius: 4px;
+  border: 1px solid #d4c2b2;
+  background: #fff8f0;
+  color: #7d2632;
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.12s ease;
+}
+
+.ac-jump-btn:hover {
+  background: #7d2632;
+  color: #ffffff;
+  border-color: #7d2632;
+}
+
+/* 匹配字符高亮 */
+.ac-hl {
+  background: #fedbe4;
+  color: #b31d45;
+  font-weight: 700;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+/* 底部状态提示条 */
+.ac-footer {
+  padding: 6px 12px;
+  background: #f8f2e9;
+  border-top: 1px solid #ecdcd0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: #9c8a7e;
+  font-family: ui-monospace, monospace;
+}
+
+.ac-empty {
+  padding: 24px 16px;
+  text-align: center;
+  color: #9c8a7e;
+  font-size: 13px;
+  background: #fffdf8;
+}
+
+.ac-empty p {
+  margin: 0 0 4px;
+}

@@ -1,0 +1,1205 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>馆主工作台 · 閲読器作品記録 ARCHIVE STUDIO</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="retro.css">
+  <style>
+    :root {
+      --studio-bg: #fcf9f2;
+      --studio-card-bg: #ffffff;
+      --studio-border: #e3d5c5;
+      --studio-ink: #2b231d;
+      --studio-muted: #806f63;
+      --studio-wine: #7c2632;
+      --studio-wine-light: #9a3543;
+      --studio-cream: #f4ecdf;
+    }
+
+    body {
+      background: var(--studio-bg);
+      color: var(--studio-ink);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    /* 顶部导航条 */
+    .studio-nav {
+      background: #ffffff;
+      border-bottom: 1.5px solid var(--studio-border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(50, 35, 25, 0.04);
+    }
+
+    .studio-nav__left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .studio-nav__back {
+      font-size: 13px;
+      color: var(--studio-wine);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 4px;
+      border: 1px solid #ebdad2;
+      background: #fff8f7;
+      transition: all 0.15s ease;
+    }
+
+    .studio-nav__back:hover {
+      background: #fbeee9;
+    }
+
+    .studio-nav__brand {
+      font-family: Georgia, "Songti SC", "SimSun", serif;
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--studio-ink);
+      letter-spacing: 0.5px;
+    }
+
+    .studio-nav__pill {
+      font-size: 11px;
+      background: #7c2632;
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 3px;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .studio-nav__right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .studio-btn {
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 4px;
+      border: 1px solid var(--studio-border);
+      background: #ffffff;
+      color: var(--studio-ink);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .studio-btn:hover {
+      background: #f7efe6;
+    }
+
+    .studio-btn--primary {
+      background: var(--studio-wine);
+      border-color: var(--studio-wine);
+      color: #ffffff;
+    }
+
+    .studio-btn--primary:hover {
+      background: var(--studio-wine-light);
+    }
+
+    /* 页面主体 */
+    .studio-container {
+      max-width: 1040px;
+      margin: 28px auto;
+      padding: 0 20px 80px;
+    }
+
+    .studio-header {
+      margin-bottom: 24px;
+    }
+
+    .studio-kicker {
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: #9c4c23;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+
+    .studio-title {
+      font-family: Georgia, "Songti SC", serif;
+      font-size: 26px;
+      margin: 0 0 6px;
+      color: var(--studio-ink);
+    }
+
+    .studio-subtitle {
+      font-size: 14px;
+      color: var(--studio-muted);
+      margin: 0;
+    }
+
+    /* 选项卡 Tab */
+    .studio-tabs {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1.5px solid var(--studio-border);
+      margin-bottom: 24px;
+    }
+
+    .studio-tab-btn {
+      padding: 10px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--studio-muted);
+      cursor: pointer;
+      border-bottom: 2.5px solid transparent;
+      margin-bottom: -1.5px;
+      transition: all 0.15s ease;
+    }
+
+    .studio-tab-btn:hover {
+      color: var(--studio-ink);
+    }
+
+    .studio-tab-btn.is-active {
+      color: var(--studio-wine);
+      border-bottom-color: var(--studio-wine);
+      background: rgba(124, 38, 50, 0.03);
+    }
+
+    /* 面板与表单 */
+    .studio-card {
+      background: var(--studio-card-bg);
+      border: 1.5px solid var(--studio-border);
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(50, 35, 25, 0.04);
+      margin-bottom: 24px;
+    }
+
+    .studio-card__title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--studio-ink);
+      margin: 0 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed var(--studio-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .studio-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .studio-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 768px) {
+      .studio-grid-2,
+      .studio-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .studio-field {
+      margin-bottom: 16px;
+    }
+
+    .studio-field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--studio-ink);
+      margin-bottom: 6px;
+    }
+
+    .studio-field label small {
+      font-weight: normal;
+      color: var(--studio-muted);
+      margin-left: 4px;
+    }
+
+    .studio-input,
+    .studio-select,
+    .studio-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 9px 12px;
+      font-size: 14px;
+      border: 1.5px solid var(--studio-border);
+      border-radius: 4px;
+      background: #faf6ee;
+      color: var(--studio-ink);
+      font-family: inherit;
+      outline: none;
+      transition: all 0.15s ease;
+    }
+
+    .studio-input:focus,
+    .studio-select:focus,
+    .studio-textarea:focus {
+      background: #ffffff;
+      border-color: var(--studio-wine);
+      box-shadow: 0 0 0 3px rgba(124, 38, 50, 0.08);
+    }
+
+    .studio-textarea {
+      min-height: 120px;
+      line-height: 1.6;
+      resize: vertical;
+    }
+
+    /* 快捷芯片 */
+    .chip-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .quick-chip {
+      font-size: 11.5px;
+      padding: 3px 8px;
+      border-radius: 3px;
+      background: #f2e9dc;
+      border: 1px solid #d9ccbe;
+      color: #5c4b3f;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.12s ease;
+    }
+
+    .quick-chip:hover {
+      background: #e6dacb;
+      border-color: #baa896;
+    }
+
+    .selected-tags-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px;
+      background: #fdfaf6;
+      border: 1.5px dashed var(--studio-border);
+      border-radius: 4px;
+      min-height: 38px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .tag-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      background: #f3e6d6;
+      border: 1px solid #dfcfbe;
+      color: #7d2632;
+      font-weight: 600;
+    }
+
+    .tag-badge__remove {
+      cursor: pointer;
+      font-weight: bold;
+      opacity: 0.6;
+    }
+
+    .tag-badge__remove:hover {
+      opacity: 1;
+    }
+
+    /* 封面预览与调节台 */
+    .cover-upload-area {
+      border: 2px dashed #d5c6b6;
+      border-radius: 6px;
+      padding: 20px;
+      text-align: center;
+      background: #faf6ee;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .cover-upload-area:hover,
+    .cover-upload-area.is-dragover {
+      background: #f4ecdf;
+      border-color: var(--studio-wine);
+    }
+
+    .cover-preview-box {
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 16 / 9;
+      background: #eae2d6;
+      border: 1.5px solid var(--studio-border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 12px auto;
+      position: relative;
+    }
+
+    .cover-preview-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .cover-crop-sliders {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .crop-slider-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+    }
+
+    .crop-slider-row span:first-child {
+      width: 60px;
+      color: var(--studio-muted);
+      font-weight: 600;
+    }
+
+    .crop-slider-row input[type="range"] {
+      flex: 1;
+    }
+
+    /* 提交与通知条 */
+    .submit-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 14px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1.5px solid var(--studio-border);
+    }
+
+    /* 认证弹窗 */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 20, 15, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .auth-modal {
+      background: #fffdf9;
+      border: 2px solid #7c2632;
+      border-radius: 8px;
+      padding: 32px 28px;
+      max-width: 380px;
+      width: 100%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      text-align: center;
+    }
+
+    .auth-modal h3 {
+      font-family: Georgia, serif;
+      font-size: 20px;
+      margin: 0 0 8px;
+      color: #7c2632;
+    }
+
+    .auth-modal p {
+      font-size: 13px;
+      color: var(--studio-muted);
+      margin: 0 0 20px;
+      line-height: 1.5;
+    }
+
+    /* 提示 Toast */
+    .studio-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #2b231d;
+      color: #ffffff;
+      padding: 10px 18px;
+      border-radius: 4px;
+      font-size: 13.5px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.2s ease;
+      pointer-events: none;
+    }
+
+    .studio-toast.is-show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 作品管理表格 */
+    .works-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .works-table th,
+    .works-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid #ebdcd0;
+    }
+
+    .works-table th {
+      background: #f6eee3;
+      color: #635246;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .works-table tr:hover {
+      background: #faf4ec;
+    }
+
+    .table-thumb {
+      width: 54px;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+      border-radius: 2px;
+      border: 1px solid #d9ccbe;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 馆主口令验证弹窗 -->
+  <div class="auth-overlay" id="authOverlay">
+    <div class="auth-modal">
+      <h3>馆主通行验证</h3>
+      <p>控制台仅供网站主人录入与管理作品。请输入馆主通行口令：</p>
+      <input type="password" id="passcodeInput" class="studio-input" placeholder="输入口令…" style="text-align:center;font-size:16px;letter-spacing:2px;margin-bottom:14px;" autofocus>
+      <button type="button" id="authSubmitBtn" class="studio-btn studio-btn--primary" style="width:100%;padding:10px;">验证身份并进入</button>
+      <p style="margin-top:12px;font-size:11.5px;color:#a39284;">默认初始口令：keyan2026（进入后可随时修改）</p>
+    </div>
+  </div>
+
+  <!-- 顶部导航 -->
+  <header class="studio-nav">
+    <div class="studio-nav__left">
+      <a href="works.html" class="studio-nav__back">← 返回作品一览</a>
+      <span class="studio-nav__brand">閲読器作品記録</span>
+      <span class="studio-nav__pill">馆主工作台</span>
+    </div>
+    <div class="studio-nav__right">
+      <span style="font-size:12px;color:var(--studio-muted);" id="authStatusText">已登录</span>
+      <button type="button" class="studio-btn" id="changePasscodeBtn">修改口令</button>
+      <button type="button" class="studio-btn" id="logoutBtn">退出</button>
+    </div>
+  </header>
+
+  <main class="studio-container">
+    <div class="studio-header">
+      <p class="studio-kicker">ARCHIVIST WORKBENCH · 作品管理与发布</p>
+      <h1 class="studio-title">作品录入与内容控制台</h1>
+      <p class="studio-subtitle">在这里提交的新作品将自动入库、生成独立详情页并在全站（首页、检索、抽卡、心选）同步呈现。</p>
+    </div>
+
+    <!-- 选项卡切换 -->
+    <div class="studio-tabs">
+      <button type="button" class="studio-tab-btn is-active" data-tab="create">录入新作品</button>
+      <button type="button" class="studio-tab-btn" data-tab="manage">已收录作品库 (<span id="totalWorksCount">137</span>)</button>
+      <button type="button" class="studio-tab-btn" data-tab="settings">数据备份与设置</button>
+    </div>
+
+    <!-- Tab 1: 录入新作品 -->
+    <section id="tab-create" class="studio-tab-pane">
+      <form id="createWorkForm">
+        <!-- 1. 基础信息卡片 -->
+        <div class="studio-card">
+          <div class="studio-card__title">
+            <span>基础参数</span>
+            <span style="font-size:12px;font-weight:normal;color:#9c4c23;" id="nextIdBadge">档案编号：work-138</span>
+          </div>
+
+          <div class="studio-grid-2">
+            <div class="studio-field">
+              <label for="workName">作品全名 * <small>(自动添加《》书名号)</small></label>
+              <input type="text" id="workName" class="studio-input" placeholder="例如：【HP】夏花安魂曲" required>
+            </div>
+            <div class="studio-field">
+              <label for="workPlatform">游戏/发布平台</label>
+              <select id="workPlatform" class="studio-select">
+                <option value="橙光" selected>橙光</option>
+                <option value="易次元">易次元</option>
+                <option value="Steam">Steam</option>
+                <option value="ARG网页游戏">ARG网页游戏</option>
+                <option value="话本">话本</option>
+                <option value="其他">其他</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="studio-grid-3">
+            <div class="studio-field">
+              <label for="workStatus">连载状态</label>
+              <select id="workStatus" class="studio-select">
+                <option value="连载中" selected>连载中</option>
+                <option value="完结">完结</option>
+                <option value="断更">断更</option>
+                <option value="弃坑">弃坑</option>
+              </select>
+            </div>
+            <div class="studio-field">
+              <label for="workRating">推荐指数星级</label>
+              <select id="workRating" class="studio-select">
+                <option value="★★★★★">★★★★★ (私心五星)</option>
+                <option value="★★★★☆" selected>★★★★☆ (强推)</option>
+                <option value="★★★☆☆">★★★☆☆ (推荐)</option>
+                <option value="★★☆☆☆">★★☆☆☆ (一般)</option>
+                <option value="★☆☆☆☆">★☆☆☆☆ (踩雷/不推荐)</option>
+                <option value="☆☆☆☆☆">☆☆☆☆☆ (零星)</option>
+                <option value="弃游">弃游</option>
+                <option value="">暂无评分</option>
+              </select>
+            </div>
+            <div class="studio-field">
+              <label for="workPlayStatus">游玩状态</label>
+              <select id="workPlayStatus" class="studio-select">
+                <option value="追平" selected>追平</option>
+                <option value="完结通关">完结通关</option>
+                <option value="二刷">二刷</option>
+                <option value="浅尝">浅尝</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="studio-grid-3">
+            <div class="studio-field">
+              <label for="workHouse">主角学院 <small>(HP专属)</small></label>
+              <input type="text" id="workHouse" class="studio-input" placeholder="斯莱特林 / 拉文克劳 / 格兰芬多 / 赫奇帕奇">
+            </div>
+            <div class="studio-field">
+              <label for="workSexuality">性向</label>
+              <input type="text" id="workSexuality" class="studio-input" value="bg" placeholder="bg / bl / gl / 无cp">
+            </div>
+            <div class="studio-field">
+              <label for="workPlayTime">游玩时长记录</label>
+              <input type="text" id="workPlayTime" class="studio-input" placeholder="例如：6.5小时">
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. 分类标签与角色 -->
+        <div class="studio-card">
+          <div class="studio-card__title">
+            <span>标签分类与攻略角色</span>
+          </div>
+
+          <div class="studio-field">
+            <label>已选游戏标签 <small>(可点击删除)</small></label>
+            <div class="selected-tags-box" id="selectedTagsBox">
+              <span style="font-size:12px;color:#a89585;" id="noTagsHint">点击下方快捷标签，或直接输入新标签</span>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="customTagInput" class="studio-input" placeholder="输入自定义新标签，按 Enter 或点添加…" style="max-width:320px;">
+              <button type="button" class="studio-btn" id="addCustomTagBtn">添加标签</button>
+            </div>
+
+            <div style="margin-top:12px;">
+              <span style="font-size:11.5px;font-weight:600;color:var(--studio-muted);">常用快捷标签点选：</span>
+              <div class="chip-cloud" id="quickTagsCloud">
+                <!-- 常用标签 -->
+                <span class="quick-chip" data-tag="HP">HP</span>
+                <span class="quick-chip" data-tag="光影区">光影区</span>
+                <span class="quick-chip" data-tag="BTS">BTS</span>
+                <span class="quick-chip" data-tag="古风">古风</span>
+                <span class="quick-chip" data-tag="大女主">大女主</span>
+                <span class="quick-chip" data-tag="悬疑推理">悬疑推理</span>
+                <span class="quick-chip" data-tag="恋综">恋综</span>
+                <span class="quick-chip" data-tag="子世代">子世代</span>
+                <span class="quick-chip" data-tag="亲世代">亲世代</span>
+                <span class="quick-chip" data-tag="祖世代">祖世代</span>
+                <span class="quick-chip" data-tag="蛇院女主(原创角色)">蛇院女主(原创角色)</span>
+                <span class="quick-chip" data-tag="鹰院女主【原创角色】">鹰院女主【原创角色】</span>
+                <span class="quick-chip" data-tag="狮院女主(原创角色)">狮院女主(原创角色)</span>
+                <span class="quick-chip" data-tag="獾院女主【原创角色】">獾院女主【原创角色】</span>
+                <span class="quick-chip" data-tag="玛丽苏万人迷">玛丽苏万人迷</span>
+                <span class="quick-chip" data-tag="真人区">真人区</span>
+                <span class="quick-chip" data-tag="恶女">恶女</span>
+                <span class="quick-chip" data-tag="穿书/穿游">穿书/穿游</span>
+                <span class="quick-chip" data-tag="修仙">修仙</span>
+                <span class="quick-chip" data-tag="大逃杀">大逃杀</span>
+                <span class="quick-chip" data-tag="含恐怖元素">含恐怖元素</span>
+                <span class="quick-chip" data-tag="微恐">微恐</span>
+                <span class="quick-chip" data-tag="成长升级流">成长升级流</span>
+                <span class="quick-chip" data-tag="豪门">豪门</span>
+                <span class="quick-chip" data-tag="多视角多可控主角">多视角多可控主角</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="studio-field" style="margin-top:20px;">
+            <label for="workCharacters">攻略对象 / 核心出场角色 <small>(多个角色请用逗号隔开)</small></label>
+            <input type="text" id="workCharacters" class="studio-input" placeholder="例如：德拉科, 西奥多, 塞德里克">
+            <div style="margin-top:8px;">
+              <span style="font-size:11.5px;font-weight:600;color:var(--studio-muted);">常用角色快捷点选：</span>
+              <div class="chip-cloud" id="quickCharsCloud">
+                <span class="quick-chip" data-char="德拉科">德拉科</span>
+                <span class="quick-chip" data-char="西奥多">西奥多</span>
+                <span class="quick-chip" data-char="塞德里克">塞德里克</span>
+                <span class="quick-chip" data-char="布雷斯">布雷斯</span>
+                <span class="quick-chip" data-char="哈利">哈利</span>
+                <span class="quick-chip" data-char="里德尔">里德尔</span>
+                <span class="quick-chip" data-char="弗雷德">弗雷德</span>
+                <span class="quick-chip" data-char="乔治">乔治</span>
+                <span class="quick-chip" data-char="西里斯">西里斯</span>
+                <span class="quick-chip" data-char="雷古勒斯">雷古勒斯</span>
+                <span class="quick-chip" data-char="小巴蒂">小巴蒂</span>
+                <span class="quick-chip" data-char="田柾国">田柾国</span>
+                <span class="quick-chip" data-char="朴智旻">朴智旻</span>
+                <span class="quick-chip" data-char="金泰亨">金泰亨</span>
+                <span class="quick-chip" data-char="闵玧其">闵玧其</span>
+                <span class="quick-chip" data-char="金硕珍">金硕珍</span>
+                <span class="quick-chip" data-char="张元英">张元英</span>
+                <span class="quick-chip" data-char="裴珠泫">裴珠泫</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. 封面图上传与裁剪调节台 -->
+        <div class="studio-card">
+          <div class="studio-card__title">
+            <span>封面图片上传与视口对齐</span>
+          </div>
+
+          <div class="cover-upload-area" id="coverDropZone">
+            <input type="file" id="coverFileInput" accept="image/*" style="display:none;">
+            <p style="margin:0 0 6px;font-weight:600;font-size:14px;">拖拽本地封面图片至此，或 <span style="color:var(--studio-wine);text-decoration:underline;">点击浏览选择文件</span></p>
+            <p style="margin:0;font-size:12px;color:var(--studio-muted);">支持 PNG / JPG / WEBP 格式图片，自动优化存储</p>
+          </div>
+
+          <div class="cover-preview-box" id="coverPreviewContainer">
+            <img id="coverPreviewImg" src="assets/covers/work-001.png" alt="封面预览">
+          </div>
+
+          <div class="cover-crop-sliders">
+            <div class="crop-slider-row">
+              <span>横向焦点</span>
+              <input type="range" id="cropX" min="0" max="100" value="50">
+              <span id="cropXVal" style="width:36px;text-align:right;">50%</span>
+            </div>
+            <div class="crop-slider-row">
+              <span>纵向焦点</span>
+              <input type="range" id="cropY" min="0" max="100" value="20">
+              <span id="cropYVal" style="width:36px;text-align:right;">20%</span>
+            </div>
+            <div class="crop-slider-row">
+              <span>缩放倍率</span>
+              <input type="range" id="cropZoom" min="100" max="150" value="100">
+              <span id="cropZoomVal" style="width:36px;text-align:right;">1.00x</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. 馆主深度游玩手记 (Repo) -->
+        <div class="studio-card">
+          <div class="studio-card__title">
+            <span>馆主深度游玩手记 (Repo / Play Notes)</span>
+          </div>
+
+          <div class="studio-field">
+            <label for="workRepo">安利寄语与评述正文 <small>(支持多段文字，输入 # 或 ## 自动生成章节小标题)</small></label>
+            <textarea id="workRepo" class="studio-textarea" rows="8" placeholder="写下你的私心评价、故事亮点、各角色分线点评…&#10;&#10;例如：&#10;阿斯托利亚个人向，文字细腻深沉。&#10;&#10;## 德拉科·马尔福&#10;老马吃嫩草，偏偏当事人如磐石不为所动…"></textarea>
+          </div>
+        </div>
+
+        <!-- 提交发布条 -->
+        <div class="submit-bar">
+          <button type="reset" class="studio-btn" id="resetBtn">重置表单</button>
+          <button type="submit" class="studio-btn studio-btn--primary" id="publishBtn" style="padding:10px 24px;font-size:15px;">
+            确认入库并全站发布
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Tab 2: 已收录作品管理 -->
+    <section id="tab-manage" class="studio-tab-pane" hidden>
+      <div class="studio-card">
+        <div class="studio-card__title">
+          <span>全站作品总览</span>
+          <input type="search" id="manageSearchInput" class="studio-input" placeholder="搜索书名、标签、角色…" style="max-width:280px;font-size:12.5px;padding:5px 10px;">
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="works-table">
+            <thead>
+              <tr>
+                <th style="width:60px;">编号</th>
+                <th style="width:70px;">封面</th>
+                <th>作品名称</th>
+                <th style="width:80px;">平台</th>
+                <th style="width:80px;">状态</th>
+                <th style="width:100px;">评分</th>
+                <th>标签</th>
+                <th style="width:90px;text-align:center;">操作</th>
+              </tr>
+            </thead>
+            <tbody id="manageTableBody">
+              <tr>
+                <td colspan="8" style="text-align:center;padding:30px;color:var(--studio-muted);">正在加载作品数据…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tab 3: 数据备份与口令设置 -->
+    <section id="tab-settings" class="studio-tab-pane" hidden>
+      <div class="studio-card">
+        <div class="studio-card__title">
+          <span>馆主通行口令设置</span>
+        </div>
+        <div style="max-width:400px;">
+          <div class="studio-field">
+            <label for="oldPassInput">原口令</label>
+            <input type="password" id="oldPassInput" class="studio-input" placeholder="输入当前口令">
+          </div>
+          <div class="studio-field">
+            <label for="newPassInput">新口令</label>
+            <input type="password" id="newPassInput" class="studio-input" placeholder="输入新口令 (至少4位)">
+          </div>
+          <button type="button" class="studio-btn studio-btn--primary" id="savePasscodeBtn">保存新口令</button>
+        </div>
+      </div>
+
+      <div class="studio-card">
+        <div class="studio-card__title">
+          <span>作品全量数据库备份</span>
+        </div>
+        <p style="font-size:13px;color:var(--studio-muted);margin:0 0 16px;">
+          一键导出全站作品数据为 JSON 格式备份文件，可以在任何时候安全备份你的阅读心血。
+        </p>
+        <button type="button" class="studio-btn" id="exportBackupBtn">导出全站作品备份 (JSON)</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="studio-toast" id="studioToast"></div>
+
+  <script>
+    (() => {
+      const STORAGE_KEY = 'archive_studio_token';
+      let currentToken = localStorage.getItem(STORAGE_KEY) || '';
+      let selectedTags = [];
+      let coverBase64 = null;
+      let allWorksData = [];
+
+      const toastEl = document.getElementById('studioToast');
+      function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add('is-show');
+        setTimeout(() => toastEl.classList.remove('is-show'), 2600);
+      }
+
+      // 1. 认证管理
+      const authOverlay = document.getElementById('authOverlay');
+      const passcodeInput = document.getElementById('passcodeInput');
+      const authSubmitBtn = document.getElementById('authSubmitBtn');
+
+      async function checkAuth() {
+        if (!currentToken) {
+          authOverlay.style.display = 'flex';
+          return;
+        }
+        try {
+          const res = await fetch('/api/admin/check-auth', {
+            headers: { 'Authorization': `Bearer ${currentToken}` }
+          });
+          const data = await res.json();
+          if (data.authenticated) {
+            authOverlay.style.display = 'none';
+            loadInitialData();
+          } else {
+            authOverlay.style.display = 'flex';
+          }
+        } catch (e) {
+          authOverlay.style.display = 'flex';
+        }
+      }
+
+      async function doLogin() {
+        const passcode = passcodeInput.value.trim();
+        if (!passcode) return;
+        try {
+          const res = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ passcode })
+          });
+          const data = await res.json();
+          if (data.success && data.token) {
+            currentToken = data.token;
+            localStorage.setItem(STORAGE_KEY, currentToken);
+            authOverlay.style.display = 'none';
+            showToast('馆主验证成功，欢迎回来！');
+            loadInitialData();
+          } else {
+            alert(data.error || '口令错误，请重试');
+          }
+        } catch (err) {
+          alert('网络请求失败');
+        }
+      }
+
+      authSubmitBtn.addEventListener('click', doLogin);
+      passcodeInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') doLogin();
+      });
+
+      document.getElementById('logoutBtn').addEventListener('click', () => {
+        localStorage.removeItem(STORAGE_KEY);
+        currentToken = '';
+        authOverlay.style.display = 'flex';
+        showToast('已安全退出工作台');
+      });
+
+      // 2. 选项卡切换
+      document.querySelectorAll('.studio-tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.studio-tab-btn').forEach(b => b.classList.remove('is-active'));
+          document.querySelectorAll('.studio-tab-pane').forEach(p => p.hidden = true);
+
+          btn.classList.add('is-active');
+          const tabId = btn.dataset.tab;
+          document.getElementById('tab-' + tabId).hidden = false;
+
+          if (tabId === 'manage') {
+            loadWorksTable();
+          }
+        });
+      });
+
+      // 3. 标签系统交互
+      const selectedTagsBox = document.getElementById('selectedTagsBox');
+      const noTagsHint = document.getElementById('noTagsHint');
+      const customTagInput = document.getElementById('customTagInput');
+      const addCustomTagBtn = document.getElementById('addCustomTagBtn');
+
+      function renderSelectedTags() {
+        if (selectedTags.length === 0) {
+          selectedTagsBox.innerHTML = '';
+          selectedTagsBox.appendChild(noTagsHint);
+          return;
+        }
+        selectedTagsBox.innerHTML = selectedTags.map((t, idx) => `
+          <span class="tag-badge">
+            <span>${t}</span>
+            <span class="tag-badge__remove" data-idx="${idx}">✕</span>
+          </span>
+        `).join('');
+
+        selectedTagsBox.querySelectorAll('.tag-badge__remove').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const idx = parseInt(btn.dataset.idx, 10);
+            selectedTags.splice(idx, 1);
+            renderSelectedTags();
+          });
+        });
+      }
+
+      function addTag(tag) {
+        const clean = tag.trim();
+        if (!clean || selectedTags.includes(clean)) return;
+        selectedTags.push(clean);
+        renderSelectedTags();
+      }
+
+      document.querySelectorAll('#quickTagsCloud .quick-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          addTag(chip.dataset.tag);
+        });
+      });
+
+      addCustomTagBtn.addEventListener('click', () => {
+        if (customTagInput.value) {
+          addTag(customTagInput.value);
+          customTagInput.value = '';
+        }
+      });
+
+      customTagInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          if (customTagInput.value) {
+            addTag(customTagInput.value);
+            customTagInput.value = '';
+          }
+        }
+      });
+
+      // 4. 角色快捷点选
+      const charsInput = document.getElementById('workCharacters');
+      document.querySelectorAll('#quickCharsCloud .quick-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+          const char = chip.dataset.char;
+          const current = charsInput.value.split(/[,，]/).map(s => s.trim()).filter(Boolean);
+          if (!current.includes(char)) {
+            current.push(char);
+            charsInput.value = current.join(', ');
+          }
+        });
+      });
+
+      // 5. 封面图上传与实时预览调节
+      const dropZone = document.getElementById('coverDropZone');
+      const fileInput = document.getElementById('coverFileInput');
+      const previewImg = document.getElementById('coverPreviewImg');
+      const cropX = document.getElementById('cropX');
+      const cropY = document.getElementById('cropY');
+      const cropZoom = document.getElementById('cropZoom');
+      const cropXVal = document.getElementById('cropXVal');
+      const cropYVal = document.getElementById('cropYVal');
+      const cropZoomVal = document.getElementById('cropZoomVal');
+
+      function updatePreviewTransform() {
+        const x = cropX.value;
+        const y = cropY.value;
+        const zoom = (cropZoom.value / 100).toFixed(2);
+        cropXVal.textContent = x + '%';
+        cropYVal.textContent = y + '%';
+        cropZoomVal.textContent = zoom + 'x';
+
+        previewImg.style.objectPosition = `${x}% ${y}%`;
+        previewImg.style.transformOrigin = `${x}% ${y}%`;
+        previewImg.style.transform = `scale(${zoom})`;
+      }
+
+      cropX.addEventListener('input', updatePreviewTransform);
+      cropY.addEventListener('input', updatePreviewTransform);
+      cropZoom.addEventListener('input', updatePreviewTransform);
+
+      dropZone.addEventListener('click', () => fileInput.click());
+
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        loadFile(file);
+      });
+
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('is-dragover');
+      });
+
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('is-dragover');
+      });
+
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('is-dragover');
+        const file = e.dataTransfer.files && e.dataTransfer.files[0];
+        if (file) loadFile(file);
+      });
+
+      function loadFile(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          coverBase64 = e.target.result;
+          previewImg.src = coverBase64;
+          showToast('封面已选定，可使用滑杆调整焦点');
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // 6. 加载初始数据
+      async function loadInitialData() {
+        try {
+          const res = await fetch('/api/admin/works');
+          const data = await res.json();
+          allWorksData = data.works || [];
+          document.getElementById('totalWorksCount').textContent = allWorksData.length;
+          document.getElementById('nextIdBadge').textContent = `分配档案号：${data.nextId}`;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // 7. 表单提交发布
+      const createForm = document.getElementById('createWorkForm');
+      createForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('workName').value.trim();
+        if (!name) {
+          alert('请填写作品全名');
+          return;
+        }
+
+        const publishBtn = document.getElementById('publishBtn');
+        publishBtn.disabled = true;
+        publishBtn.textContent = '正在发布入库并更新全站…';
+
+        const payload = {
+          name,
+          platform: document.getElementById('workPlatform').value,
+          status: document.getElementById('workStatus').value,
+          rating: document.getElementById('workRating').value,
+          playStatus: document.getElementById('workPlayStatus').value,
+          house: document.getElementById('workHouse').value.trim(),
+          sexuality: document.getElementById('workSexuality').value.trim(),
+          playTime: document.getElementById('workPlayTime').value.trim(),
+          tags: selectedTags,
+          characters: charsInput.value.trim(),
+          cropX: cropX.value,
+          cropY: cropY.value,
+          zoom: cropZoom.value,
+          coverImageBase64: coverBase64,
+          repoContent: document.getElementById('workRepo').value.trim()
+        };
+
+        try {
+          const res = await fetch('/api/admin/works', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify(payload)
+          });
+          const result = await res.json();
+
+          if (result.success) {
+            showToast(`作品《${name}》已成功发布入库！`);
+            if (confirm(`作品《${name}》入库成功（${result.work.id}）！\n\n是否立即打开该作品详情页进行查阅？`)) {
+              window.open(result.detailUrl, '_blank');
+            }
+            createForm.reset();
+            selectedTags = [];
+            renderSelectedTags();
+            coverBase64 = null;
+            loadInitialData();
+          } else {
+            alert('发布失败：' + (result.error || '未知错误'));
+          }
+        } catch (err) {
+          alert('请求出错，请重试');
+        } finally {
+          publishBtn.disabled = false;
+          publishBtn.textContent = '确认入库并全站发布';
+        }
+      });
+
+      // 8. 作品表格渲染
+      function loadWorksTable(filter = '') {
+        const tbody = document.getElementById('manageTableBody');
+        const list = filter
+          ? allWorksData.filter(w => [w.name, w.platform, w.status, w.rating, ...(w.tags||[]), w.characters].join(' ').toLowerCase().includes(filter.toLowerCase()))
+          : allWorksData;
+
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:24px;color:var(--studio-muted);">未找到符合条件的作品记录</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = list.map(w => `
+          <tr>
+            <td><code>${w.id}</code></td>
+            <td><img src="assets/covers/${w.id}.png" onerror="this.src='assets/covers/work-001.png'" class="table-thumb" alt=""></td>
+            <td><strong>${w.name}</strong></td>
+            <td>${w.platform || '-'}</td>
+            <td><span style="font-size:11px;background:#f2ede4;padding:2px 6px;border-radius:2px;">${w.status || '-'}</span></td>
+            <td>${w.rating || '<span style="color:#aaa;">-</span>'}</td>
+            <td style="max-width:200px;font-size:11px;color:#705e52;">${(w.tags||[]).slice(0,3).join(', ')}</td>
+            <td style="text-align:center;">
+              <a href="works/${w.id}.html" target="_blank" class="studio-btn" style="padding:3px 8px;font-size:11.5px;text-decoration:none;">详情 ↗</a>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      document.getElementById('manageSearchInput').addEventListener('input', (e) => {
+        loadWorksTable(e.target.value.trim());
+      });
+
+      // 9. 修改口令
+      document.getElementById('changePasscodeBtn').addEventListener('click', () => {
+        document.querySelector('[data-tab="settings"]').click();
+      });
+
+      document.getElementById('savePasscodeBtn').addEventListener('click', async () => {
+        const oldPasscode = document.getElementById('oldPassInput').value.trim();
+        const newPasscode = document.getElementById('newPassInput').value.trim();
+        if (!oldPasscode || !newPasscode) {
+          alert('请完整填写原口令与新口令');
+          return;
+        }
+
+        try {
+          const res = await fetch('/api/admin/change-passcode', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${currentToken}`
+            },
+            body: JSON.stringify({ oldPasscode, newPasscode })
+          });
+          const data = await res.json();
+          if (data.success) {
+            showToast('口令修改成功，请牢记新口令！');
+            document.getElementById('oldPassInput').value = '';
+            document.getElementById('newPassInput').value = '';
+          } else {
+            alert('修改失败：' + (data.error || '原口令不正确'));
+          }
+        } catch (e) {
+          alert('网络错误');
+        }
+      });
+
+      // 10. 导出备份
+      document.getElementById('exportBackupBtn').addEventListener('click', () => {
+        const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(allWorksData, null, 2));
+        const a = document.createElement('a');
+        a.href = dataStr;
+        a.download = `archive-all-works-${new Date().toISOString().slice(0,10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        showToast('已导出作品数据库全量备份');
+      });
+
+      // 初始化检查认证
+      checkAuth();
+    })();
+  </script>
+</body>
+</html>

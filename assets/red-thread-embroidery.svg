@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 460" width="100%" height="100%" style="overflow: visible;">
+  <defs>
+    <!-- Soft dimensional drop shadow for embroidery thread -->
+    <filter id="threadDropShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="1" dy="3.5" stdDeviation="2.5" flood-color="#42060f" flood-opacity="0.48"/>
+    </filter>
+    
+    <!-- Paper puncture eyelet gradient -->
+    <radialGradient id="eyeletHole" cx="45%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#1f0307"/>
+      <stop offset="75%" stop-color="#3d0a12"/>
+      <stop offset="100%" stop-color="#802638"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Script Calligraphy Echoing "Always Together" Poster (Image 2) -->
+  <g class="embroidery-script-layer" style="user-select: none;">
+    <text x="56" y="24" font-family="'Alex Brush', 'Parisienne', cursive" font-size="34" fill="#9e1a27" letter-spacing="1">Always</text>
+    <text x="296" y="446" text-anchor="end" font-family="'Alex Brush', 'Parisienne', cursive" font-size="34" fill="#9e1a27" letter-spacing="1">Together</text>
+  </g>
+
+  <!-- Needle Pierced Eyelet Holes in Photo Paper -->
+  <g class="eyelet-holes">
+    <!-- Puncture Hole 1 (Top-right) -->
+    <circle cx="282" cy="78" r="4.2" fill="url(#eyeletHole)" stroke="#fae6ec" stroke-width="1"/>
+    <!-- Puncture Hole 2 (Upper-left) -->
+    <circle cx="48" cy="142" r="4.2" fill="url(#eyeletHole)" stroke="#fae6ec" stroke-width="1"/>
+    <!-- Puncture Hole 3 (Mid-right) -->
+    <circle cx="286" cy="214" r="4.2" fill="url(#eyeletHole)" stroke="#fae6ec" stroke-width="1"/>
+    <!-- Center Stitch Pair for Image 2 Cross 'X' (Hand-sewn tie) -->
+    <circle cx="152" cy="236" r="3" fill="url(#eyeletHole)" stroke="#fae6ec" stroke-width="0.8"/>
+    <circle cx="178" cy="236" r="3" fill="url(#eyeletHole)" stroke="#fae6ec" stroke-width="0.8"/>
+    <circle cx="152" cy="262" r="3" fill="url(#eyeletHole)" stroke="#fae6ec" stroke-width="0.8"/>
+    <circle cx="178" cy="262" r="3" fill="url(#eyeletHole)" stroke="#fae6ec" stroke-width="0.8"/>
+    <!-- Puncture Hole 4 (Lower-left) -->
+    <circle cx="42" cy="286" r="4.2" fill="url(#eyeletHole)" stroke="#fae6ec" stroke-width="1"/>
+    <!-- Puncture Hole 5 (Bottom-right) -->
+    <circle cx="280" cy="362" r="4.2" fill="url(#eyeletHole)" stroke="#fae6ec" stroke-width="1"/>
+    <!-- Puncture Hole 6 (Bottom-left exit) -->
+    <circle cx="48" cy="404" r="4.2" fill="url(#eyeletHole)" stroke="#fae6ec" stroke-width="1"/>
+  </g>
+
+  <!-- RED EMBROIDERY THREAD (Red String of Fate / 宿命红线缠绕) -->
+  <!-- Photo sits roughly at x: 30 to 300, y: 36 to 420 -->
+  <g filter="url(#threadDropShadow)" stroke-linecap="round" stroke-linejoin="round">
+    
+    <!-- Base Deep Crimson Thread Path (Matches Image 1 wavy loops) -->
+    <!-- Pass 1: Upper entry from left around photo edge across to right hole -->
+    <path d="M 12 56 C -8 68 -2 88 36 78 C 82 66 186 64 282 78" 
+          fill="none" stroke="#9a1523" stroke-width="4.8"/>
+    <path d="M 12 56 C -8 68 -2 88 36 78 C 82 66 186 64 282 78" 
+          fill="none" stroke="#e04e62" stroke-width="1.6" stroke-dasharray="1000" stroke-dashoffset="0"/>
+
+    <!-- Wrap 1: Around the right edge from hole 1 to hole 2 -->
+    <path d="M 282 78 C 324 86 338 122 308 138 C 286 150 200 148 48 142" 
+          fill="none" stroke="#9a1523" stroke-width="4.8"/>
+    <path d="M 282 78 C 324 86 338 122 308 138 C 286 150 200 148 48 142" 
+          fill="none" stroke="#e04e62" stroke-width="1.6"/>
+
+    <!-- Wrap 2: Around the left edge down across the wrists and silk ribbon -->
+    <path d="M 48 142 C 2 138 -14 182 18 206 C 58 236 174 216 286 214" 
+          fill="none" stroke="#9a1523" stroke-width="4.8"/>
+    <path d="M 48 142 C 2 138 -14 182 18 206 C 58 236 174 216 286 214" 
+          fill="none" stroke="#e04e62" stroke-width="1.6"/>
+
+    <!-- Center Stitches: "Always Together" Hand-Sewn Cross (Image 2 motif) -->
+    <!-- Horizontal tension stitch -->
+    <path d="M 148 249 L 182 249" fill="none" stroke="#9a1523" stroke-width="4.2"/>
+    <path d="M 148 249 L 182 249" fill="none" stroke="#e04e62" stroke-width="1.4"/>
+    <!-- Cross Stitch X -->
+    <path d="M 152 236 L 178 262" fill="none" stroke="#9a1523" stroke-width="4.4"/>
+    <path d="M 152 236 L 178 262" fill="none" stroke="#e04e62" stroke-width="1.4"/>
+    <path d="M 152 262 L 178 236" fill="none" stroke="#9a1523" stroke-width="4.4"/>
+    <path d="M 152 262 L 178 236" fill="none" stroke="#e04e62" stroke-width="1.4"/>
+
+    <!-- Wrap 3: Around the right edge down to lower left -->
+    <path d="M 286 214 C 334 220 338 274 298 288 C 242 306 130 286 42 286" 
+          fill="none" stroke="#9a1523" stroke-width="4.8"/>
+    <path d="M 286 214 C 334 220 338 274 298 288 C 242 306 130 286 42 286" 
+          fill="none" stroke="#e04e62" stroke-width="1.6"/>
+
+    <!-- Wrap 4: Around left edge, sweeps across the joined fingers to bottom right -->
+    <path d="M 42 286 C -8 288 -8 340 28 358 C 84 384 196 354 280 362" 
+          fill="none" stroke="#9a1523" stroke-width="4.8"/>
+    <path d="M 42 286 C -8 288 -8 340 28 358 C 84 384 196 354 280 362" 
+          fill="none" stroke="#e04e62" stroke-width="1.6"/>
+
+    <!-- Wrap 5: Around right bottom edge, loop and loose tail trailing off -->
+    <path d="M 280 362 C 322 370 318 412 284 416 C 220 422 108 398 48 404" 
+          fill="none" stroke="#9a1523" stroke-width="4.8"/>
+    <path d="M 280 362 C 322 370 318 412 284 416 C 220 422 108 398 48 404" 
+          fill="none" stroke="#e04e62" stroke-width="1.6"/>
+
+    <!-- Trailing string end down from bottom-left to bottom center (loose fate thread) -->
+    <path d="M 48 404 C 20 410 18 438 46 448 C 66 455 110 448 132 458" 
+          fill="none" stroke="#9a1523" stroke-width="4"/>
+    <path d="M 48 404 C 20 410 18 438 46 448 C 66 455 110 448 132 458" 
+          fill="none" stroke="#e04e62" stroke-width="1.4"/>
+  </g>
+</svg>

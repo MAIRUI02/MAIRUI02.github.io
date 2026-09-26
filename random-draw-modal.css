@@ -1,0 +1,306 @@
+/* ==========================================================================
+   RANDOM DRAW MODAL & TEXT POSTER STYLES (随机安利弹窗与纯文字精美长图样式)
+   1:1 贴合图 1 手账美学与复古纸质设计
+   《閲読器作品記録》 · keyanrenshi.xyz
+   ========================================================================== */
+
+.random-draw-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10005;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.random-draw-modal.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.random-draw-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 20, 16, 0.72);
+  backdrop-filter: blur(5px);
+}
+
+.random-draw-modal__dialog {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  background: #fbf7ee;
+  border: 3px solid #334139;
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.3), 4px 4px 0 #ded1c0;
+  overflow: hidden;
+  animation: drawModalPop 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes drawModalPop {
+  0% { transform: scale(0.92) translateY(12px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.random-draw-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: #f5ece0;
+  border-bottom: 2px solid #e7dcd0;
+}
+
+.random-draw-modal__kicker {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: #a65d77;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  letter-spacing: 0.08em;
+}
+
+.random-draw-modal__title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.random-draw-modal__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: #2c231d;
+  font-family: "Noto Serif SC", serif;
+}
+
+.random-draw-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid #d4c5b6;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #635044;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.16s ease;
+}
+
+.random-draw-modal__close:hover {
+  background: #fae8eb;
+  color: #df4b75;
+  border-color: #df4b75;
+}
+
+.random-draw-modal__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* 1:1 复刻图 1 风格的纯白手账作品详情卡片 */
+.random-work-card {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid #e4d8c9;
+  border-radius: 9px;
+  box-shadow: 2px 2px 0 #ded1c0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.random-work-card__eyebrow-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.random-work-card__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 9px;
+  background: #ebd3de;
+  color: #7a314c;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.random-work-card__date {
+  font-size: 10px;
+  color: #a69488;
+  font-family: ui-monospace, monospace;
+}
+
+.random-work-card__name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2c231e;
+  font-family: "Noto Serif SC", serif;
+  line-height: 1.35;
+}
+
+.random-work-card__rating-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.random-work-card__stars {
+  color: #cc7832;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.random-work-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.random-work-card__chip {
+  padding: 2px 8px;
+  background: #f7f2ea;
+  border: 1px solid #e7ded2;
+  border-radius: 4px;
+  font-size: 11px;
+  color: #635045;
+}
+
+.random-work-card__characters {
+  font-size: 12px;
+  color: #7c685c;
+  line-height: 1.5;
+  background: #faf6f0;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border-left: 3px solid #d4b59d;
+}
+
+.random-work-card__quote-box {
+  background: #fcf9f2;
+  border: 1px dashed #dcd0bf;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 12.5px;
+  color: #55443a;
+  line-height: 1.6;
+  font-style: italic;
+  position: relative;
+}
+
+.random-work-card__quote-box::before {
+  content: "“";
+  font-size: 24px;
+  font-family: Georgia, serif;
+  color: #c9b19e;
+  line-height: 0;
+  position: relative;
+  top: 6px;
+  margin-right: 4px;
+}
+
+.random-work-card__quote-box::after {
+  content: "”";
+  font-size: 24px;
+  font-family: Georgia, serif;
+  color: #c9b19e;
+  line-height: 0;
+  position: relative;
+  top: 6px;
+  margin-left: 4px;
+}
+
+/* 弹窗底部操作按钮区 */
+.random-draw-modal__footer {
+  padding: 12px 18px;
+  background: #f6efe3;
+  border-top: 2px solid #e7dcd0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.random-draw-modal__actions-row {
+  display: flex;
+  gap: 8px;
+}
+
+.random-draw-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 9px 12px;
+  border: 2px solid #334139;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #332720;
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 #ded1c0;
+  transition: all 0.16s ease;
+}
+
+.random-draw-btn:hover {
+  background: #f4ede0;
+  transform: translateY(-1px);
+}
+
+.random-draw-btn--poster {
+  background: #7d2632;
+  color: #ffffff;
+  border-color: #334139;
+  box-shadow: 2px 2px 0 #3a151b;
+}
+
+.random-draw-btn--poster:hover {
+  background: #962f3e;
+}
+
+.random-draw-btn--reroll {
+  background: #fff8eb;
+  color: #8c5822;
+  border-color: #c9a475;
+}
+
+.random-draw-btn--fav {
+  background: #fff0f4;
+  color: #cf436c;
+  border-color: #f1a1b8;
+}
+
+.random-draw-btn--fav.is-favorited {
+  background: #ffdfe7;
+  color: #b5224e;
+}
+
+.random-draw-btn--repo {
+  background: #edf5eb;
+  color: #2b5932;
+  border-color: #92b896;
+}

@@ -2,6 +2,16 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import {
+  verifyPasscode,
+  changePasscode,
+  createSessionToken,
+  checkSessionToken,
+  readWorksArray,
+  getNextWorkId,
+  createNewWork,
+  updateExistingWork
+} from './admin-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,6 +56,90 @@ app.post('/api/upload-hero-image', (req, res) => {
     console.error('Failed to save hero image:', err);
     return res.status(500).json({ error: err.message });
   }
+});
+
+// ----------------------------------------------------------------------------
+// 馆主专属工作台 (Studio / Admin) API
+// ----------------------------------------------------------------------------
+
+// 身份校验中间件
+function requireAdminAuth(req, res, next) {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  if (!checkSessionToken(token)) {
+    return res.status(401).json({ error: '请先完成馆主口令验证' });
+  }
+  next();
+}
+
+// 1. 口令登录
+app.post('/api/admin/login', (req, res) => {
+  const passcode = req.body?.passcode;
+  if (!passcode || !verifyPasscode(passcode)) {
+    return res.status(401).json({ success: false, error: '馆主口令不正确' });
+  }
+  const token = createSessionToken();
+  return res.json({ success: true, token });
+});
+
+// 2. 检查会话有效性
+app.get('/api/admin/check-auth', (req, res) => {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.replace(/^Bearer\s+/i, '').trim();
+  return res.json({ authenticated: checkSessionToken(token) });
+});
+
+// 3. 修改口令
+app.post('/api/admin/change-passcode', requireAdminAuth, (req, res) => {
+  const { oldPasscode, newPasscode } = req.body || {};
+  const result = changePasscode(oldPasscode, newPasscode);
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  return res.json(result);
+});
+
+// 4. 获取作品列表与下一个 ID
+app.get('/api/admin/works', (req, res) => {
+  const works = readWorksArray();
+  return res.json({ works, total: works.length, nextId: getNextWorkId() });
+});
+
+app.get('/api/admin/next-id', (req, res) => {
+  return res.json({ nextId: getNextWorkId() });
+});
+
+// 5. 录入新作品（全站自动同步生效）
+app.post('/api/admin/works', requireAdminAuth, (req, res) => {
+  try {
+    const result = createNewWork(req.body);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    return res.json(result);
+  } catch (err) {
+    console.error('Error creating work:', err);
+    return res.status(500).json({ error: err.message || '入库失败' });
+  }
+});
+
+// 6. 更新已有作品
+app.put('/api/admin/works/:id', requireAdminAuth, (req, res) => {
+  try {
+    const result = updateExistingWork(req.params.id, req.body);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    return res.json(result);
+  } catch (err) {
+    console.error('Error updating work:', err);
+    return res.status(500).json({ error: err.message || '更新失败' });
+  }
+});
+
+// 馆主专属工作台直达路由
+app.get(['/studio', '/admin'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'studio.html'));
 });
 
 // Convenience route for works directory

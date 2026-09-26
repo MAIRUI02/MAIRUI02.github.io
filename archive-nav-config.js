@@ -5,6 +5,6 @@ window.ARCHIVE_NAV = {
   works: { icon: '', label: '作品一览' },
   hp: { icon: '', label: '霍格沃茨特快' },
   celebrity: { icon: '', label: '真人区' },
-  draw: { icon: '', label: '抽一部' },
-  search: { icon: '', label: '搜索' }
+  favorites: { icon: '♡', label: '我的收藏' },
+  search: { icon: '', label: '搜索与随机' }
 };
