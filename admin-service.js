@@ -367,29 +367,40 @@ export function deleteExistingWork(workId) {
 
   for (const filename of fs.readdirSync(__dirname).filter(f => f.endsWith('.html') && f !== 'studio.html')) {
     const filePath = path.join(__dirname, filename);
-    let html = fs.readFileSync(filePath, 'utf8');
-    const originalHtml = html;
-    const escapedId = id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const cardRegex = new RegExp('<article\\b[^>]*class=["\'][^"\']*\\bcard\\b[^"\']*["\'][^>]*>[\\s\\S]*?<a\\b[^>]*href=["\']works/' + escapedId + '\\.html["\'][^>]*>[\\s\\S]*?<\\/article>', 'gi');
-    html = html.replace(cardRegex, '');
-    const linkRegex = new RegExp('<a\\b[^>]*href=["\']works/' + escapedId + '\\.html["\'][^>]*>[\\s\\S]*?<\\/a>', 'gi');
-    html = html.replace(linkRegex, '');
+    const html = fs.readFileSync(filePath, 'utf8');
+    const page = load(html);
+    let changed = false;
 
-    html = html.replace(
-      /window\.(?:WORKS|WORKS_DATA)\s*=\s*(\[[\s\S]*?\]);/g,
-      (match, json) => {
-        try {
-          const items = JSON.parse(json);
-          const filtered = items.filter(w => w?.id !== id);
-          const varName = match.match(/window\.(WORKS|WORKS_DATA)/)?.[1] || 'WORKS';
-          return 'window.' + varName + '=' + JSON.stringify(filtered).replace(/</g, '\\u003c') + ';';
-        } catch (_) {
-          return match;
+    page('a[href="works/' + id + '.html"]').each((_, el) => {
+      const card = page(el).closest('.card');
+      if (card.length) card.remove();
+      else page(el).remove();
+      changed = true;
+    });
+
+    page('script:not([src])').each((_, el) => {
+      const text = page(el).html() || '';
+      const match = text.match(/^\s*window\.(WORKS|WORKS_DATA)\s*=\s*(\[[\s\S]*\]);?\s*$/);
+      if (!match) return;
+      try {
+        const items = JSON.parse(match[2]);
+        const filtered = items.filter(w => w?.id !== id);
+        if (filtered.length !== items.length) {
+          page(el).text('window.' + match[1] + '=' + JSON.stringify(filtered).replace(/</g, '\\u003c') + ';');
+          changed = true;
         }
+      } catch (_) {}
+    });
+
+    page('h2').each((_, el) => {
+      const text = page(el).text();
+      if (/^\d+\s*部作品[，,]\s*等待被翻阅$/.test(text.trim())) {
+        page(el).text(nextWorks.length + ' 部作品，等待被翻阅');
+        changed = true;
       }
-    );
-    html = html.replace(/<h2>\d+\s*部作品[，,]\s*等待被翻阅<\/h2>/g, '<h2>' + nextWorks.length + ' 部作品，等待被翻阅</h2>');
-    if (html !== originalHtml) fs.writeFileSync(filePath, html, 'utf8');
+    });
+
+    if (changed) fs.writeFileSync(filePath, page.html(), 'utf8');
   }
 
   refreshCelebrityCounts();
