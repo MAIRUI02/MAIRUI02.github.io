@@ -11,7 +11,8 @@ import {
   readWorksArray,
   getNextWorkId,
   createNewWork,
-  updateExistingWork
+  updateExistingWork,
+  deleteExistingWork
 } from './admin-service.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -151,6 +152,17 @@ app.put('/api/admin/works/:id', requireAdminAuth, (req, res) => {
   } catch (err) {
     console.error('Error updating work:', err);
     return res.status(500).json({ error: err.message || '更新失败' });
+  }
+});
+
+app.delete('/api/admin/works/:id', requireAdminAuth, (req, res) => {
+  try {
+    const result = deleteExistingWork(req.params.id);
+    if (!result.success) return res.status(404).json(result);
+    return res.json(result);
+  } catch (err) {
+    console.error('Error deleting work:', err);
+    return res.status(500).json({ error: err.message || '删除失败' });
   }
 });
 
