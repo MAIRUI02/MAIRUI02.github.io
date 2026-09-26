@@ -281,6 +281,55 @@ export function createNewWork(inputData) {
   };
 }
 
+// 删除已有作品及其本地生成资源
+export function deleteExistingWork(workId) {
+  const id = String(workId || '').trim();
+  if (!/^work-\d+$/i.test(id)) return { success: false, error: '作品 ID 格式无效' };
+
+  const works = readWorksArray();
+  const target = works.find(w => w.id === id);
+  if (!target) return { success: false, error: '未找到指定作品 ID' };
+
+  const coverMap = readJsonSafe(COVER_MAPPING_FILE);
+  const mappedCover = coverMap[id]?.file;
+  const nextWorks = works.filter(w => w.id !== id);
+  writeWorksArray(nextWorks);
+
+  delete coverMap[id];
+  writeJsonSafe(COVER_MAPPING_FILE, coverMap);
+  const overridesMap = readJsonSafe(COVER_OVERRIDES_FILE);
+  delete overridesMap[id];
+  writeJsonSafe(COVER_OVERRIDES_FILE, overridesMap);
+  const repoMap = readJsonSafe(REPO_MAPPING_FILE);
+  delete repoMap[id];
+  writeJsonSafe(REPO_MAPPING_FILE, repoMap);
+
+  const detailPath = path.join(WORKS_DIR, id + '.html');
+  if (fs.existsSync(detailPath)) fs.unlinkSync(detailPath);
+
+  if (mappedCover) {
+    const safeCoverName = path.basename(mappedCover);
+    const coverPath = path.join(COVERS_DIR, safeCoverName);
+    if (fs.existsSync(coverPath)) fs.unlinkSync(coverPath);
+  }
+
+  for (const filename of fs.readdirSync(__dirname).filter(f => f.endsWith('.html') && f !== 'studio.html')) {
+    const filePath = path.join(__dirname, filename);
+    let html = fs.readFileSync(filePath, 'utf8');
+    const originalHtml = html;
+    const escapedId = id.replace(/[.*+?^${}()|[\]\\]/g, '\\// 更新已有作品信息
+export function updateExistingWork');
+    const cardRegex = new RegExp('<article\\b[^>]*class=["\'][^"\']*\\bcard\\b[^"\']*["\'][^>]*>[\\s\\S]*?<a\\b[^>]*href=["\']works/' + escapedId + '\\.html["\'][^>]*>[\\s\\S]*?<\\/article>', 'gi');
+    html = html.replace(cardRegex, '');
+    const linkRegex = new RegExp('<a\\b[^>]*href=["\']works/' + escapedId + '\\.html["\'][^>]*>[\\s\\S]*?<\\/a>', 'gi');
+    html = html.replace(linkRegex, '');
+    html = html.replace(/<h2>\d+\s*部作品[，,]\s*等待被翻阅<\/h2>/g, '<h2>' + nextWorks.length + ' 部作品，等待被翻阅</h2>');
+    if (html !== originalHtml) fs.writeFileSync(filePath, html, 'utf8');
+  }
+
+  return { success: true, deletedId: id, deletedName: target.name, totalWorks: nextWorks.length };
+}
+
 // 更新已有作品信息
 export function updateExistingWork(workId, inputData) {
   const works = readWorksArray();
