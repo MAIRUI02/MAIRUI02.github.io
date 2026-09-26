@@ -353,6 +353,7 @@ export function createNewWork(inputData) {
   injectWorkIntoHtml('works.html', workRecord, coverFileName, cropX, cropY, zoom);
   injectWorkIntoHtml('index.html', workRecord, coverFileName, cropX, cropY, zoom);
   syncWorkToCelebrity(workRecord, { coverFileName, cropX, cropY, zoom });
+  syncMasterworksLibrary();
 
   return {
     success: true,
@@ -433,6 +434,7 @@ export function deleteExistingWork(workId) {
   }
 
   refreshCelebrityCounts();
+  syncMasterworksLibrary();
   return { success: true, deletedId: id, deletedName: target.name, totalWorks: nextWorks.length };
 }
 
@@ -496,6 +498,7 @@ export function updateExistingWork(workId, inputData) {
   injectWorkIntoHtml('works.html', target, coverFileName, cropX, cropY, zoom);
   injectWorkIntoHtml('index.html', target, coverFileName, cropX, cropY, zoom);
   syncWorkToCelebrity(target, { coverFileName, cropX, cropY, zoom });
+  syncMasterworksLibrary();
 
   return { success: true, work: target };
 }
