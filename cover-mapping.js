@@ -22,7 +22,11 @@
   }
 
   function setCover(cover, workId, entry, override) {
-    if (!cover || !entry || !entry.file) return;
+    if (!cover) return;
+    if (!entry || !entry.file) {
+      applyCrop(cover.querySelector("img"), override);
+      return;
+    }
     let img = cover.querySelector("img");
     if (!img) {
       cover.innerHTML = "";
@@ -41,7 +45,7 @@
   function applyCards(mapping, overrides) {
     document.querySelectorAll('a[href*="work-"][href$=".html"]').forEach(link => {
       const workId = workIdFromHref(link.getAttribute("href"));
-      if (!workId || !mapping[workId]) return;
+      if (!workId) return;
       const card = link.closest(".card") || link;
       setCover(card.querySelector(".cover"), workId, mapping[workId], overrides[workId]);
     });
@@ -49,7 +53,7 @@
 
   function applyDetail(mapping, overrides) {
     const match = location.pathname.match(/\/(work-\d+)\.html$/i);
-    if (!match || !mapping[match[1]]) return;
+    if (!match) return;
     setCover(document.querySelector(".work-head .cover"), match[1], mapping[match[1]], overrides[match[1]]);
   }
 
