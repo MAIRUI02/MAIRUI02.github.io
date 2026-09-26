@@ -316,6 +316,7 @@ export function createNewWork(inputData) {
   // 7. 更新 works.html 与 index.html 中的卡片
   injectWorkIntoHtml('works.html', workRecord, coverFileName, cropX, cropY, zoom);
   injectWorkIntoHtml('index.html', workRecord, coverFileName, cropX, cropY, zoom);
+  syncWorkToCelebrity(workRecord, { coverFileName, cropX, cropY, zoom });
 
   return {
     success: true,
