@@ -203,35 +203,6 @@ export function injectWorkIntoHtml(pageFile, work, coverFileName, cropX = 50, cr
   fs.writeFileSync(filePath, html, 'utf8');
 }
 
-export function syncMasterworksLibrary() {
-  const sourcePath = path.join(__dirname, 'works.html');
-  const targetPath = path.join(__dirname, 'masterworks.html');
-  if (!fs.existsSync(sourcePath) || !fs.existsSync(targetPath)) return;
-
-  const source = load(fs.readFileSync(sourcePath, 'utf8'));
-  const target = load(fs.readFileSync(targetPath, 'utf8'));
-  const sourceCatalog = source('#catalog').first();
-  const targetCatalog = target('#catalog').first();
-  if (!sourceCatalog.length || !targetCatalog.length) return;
-
-  targetCatalog.html(sourceCatalog.html() || '');
-  const total = readWorksArray().length;
-  target('section.intro h2').first().text(total + ' 部作品，等待被翻阅');
-
-  // Use the shared data file so search/filter/random always see the latest Studio data.
-  target('script').each((_, el) => {
-    const text = target(el).html() || '';
-    if (/window\.(?:WORKS|WORKS_DATA)\s*=/.test(text)) target(el).remove();
-  });
-  if (!target('script[src="works-data.js"]').length) {
-    const appScript = target('script[src="app.js"]').first();
-    if (appScript.length) appScript.before('<script src="works-data.js"></script>');
-    else target('body').append('<script src="works-data.js"></script>');
-  }
-
-  fs.writeFileSync(targetPath, target.html(), 'utf8');
-}
-
 function refreshCelebrityCounts() {
   const filePath = path.join(__dirname, 'celebrity.html');
   if (!fs.existsSync(filePath)) return;
@@ -353,7 +324,6 @@ export function createNewWork(inputData) {
   injectWorkIntoHtml('works.html', workRecord, coverFileName, cropX, cropY, zoom);
   injectWorkIntoHtml('index.html', workRecord, coverFileName, cropX, cropY, zoom);
   syncWorkToCelebrity(workRecord, { coverFileName, cropX, cropY, zoom });
-  syncMasterworksLibrary();
 
   return {
     success: true,
@@ -434,7 +404,6 @@ export function deleteExistingWork(workId) {
   }
 
   refreshCelebrityCounts();
-  syncMasterworksLibrary();
   return { success: true, deletedId: id, deletedName: target.name, totalWorks: nextWorks.length };
 }
 
@@ -498,7 +467,6 @@ export function updateExistingWork(workId, inputData) {
   injectWorkIntoHtml('works.html', target, coverFileName, cropX, cropY, zoom);
   injectWorkIntoHtml('index.html', target, coverFileName, cropX, cropY, zoom);
   syncWorkToCelebrity(target, { coverFileName, cropX, cropY, zoom });
-  syncMasterworksLibrary();
 
   return { success: true, work: target };
 }
